@@ -58,15 +58,15 @@ th { color:var(--muted); font-weight:600; font-size:10px; text-transform:upperca
 <header>
   <div>
     <h1>BTC Bot — Live Status</h1>
-    <div class="meta">Generated 2026-05-18 14:44:06 UTC · auto-refreshes every 30s</div>
+    <div class="meta">Generated 2026-05-18 14:44:40 UTC · auto-refreshes every 30s</div>
   </div>
-  <div class="meta mono">BTC mark: <strong>$76,517.50</strong></div>
+  <div class="meta mono">BTC mark: <strong>$76,477.50</strong></div>
 </header>
 
 <div class="topbar">
   <div class="stat"><div class="lbl">HL equity</div><div class="val">$286.87</div></div>
-  <div class="stat"><div class="lbl">Binance total (3 subs)</div><div class="val">$877.37</div></div>
-  <div class="stat"><div class="lbl">Combined live capital</div><div class="val">$1,164.24</div></div>
+  <div class="stat"><div class="lbl">Binance total (3 subs)</div><div class="val">$877.16</div></div>
+  <div class="stat"><div class="lbl">Combined live capital</div><div class="val">$1,164.03</div></div>
 </div>
 
 <div class="grid">
@@ -77,24 +77,26 @@ th { color:var(--muted); font-weight:600; font-size:10px; text-transform:upperca
             <span class="muted small">zynerise btc bot 1 · hedge=True · 5x</span>
           </div>
           <div class="kpis">
-            <div><div class="kpi-label">EQUITY</div><div class="kpi-value">$490.18</div></div>
-            <div><div class="kpi-label">AVAILABLE</div><div class="kpi-value">$367.72</div></div>
+            <div><div class="kpi-label">EQUITY</div><div class="kpi-value">$489.96</div></div>
+            <div><div class="kpi-label">AVAILABLE</div><div class="kpi-value">$367.53</div></div>
           </div>
           <div class="section-label">Active plans (slot → plan)</div>
           <div class="small">LONG=`plan_bb_oversold_scout_long`</div>
           <div class="section-label">Positions</div>
           <table><thead><tr><th>Dir</th><th>Size</th><th>Entry</th><th>uPnL</th><th>Side</th><th>Liq</th></tr></thead>
-          <tbody><tr><td><span class="pill long">LONG</span></td><td class="mono">0.00800</td><td class="mono">$76,953.30</td><td class="mono neg">$-3.46</td><td class="mono small">LONG</td><td class="mono small">$15,276</td></tr></tbody></table>
-          <div class="section-label">Open Orders (3)</div>
+          <tbody><tr><td><span class="pill long">LONG</span></td><td class="mono">0.00800</td><td class="mono">$76,953.30</td><td class="mono neg">$-3.68</td><td class="mono small">LONG</td><td class="mono small">$15,276</td></tr></tbody></table>
+          <div class="section-label">Open Orders (3) — regular (entry / TPs)</div>
           <table><thead><tr><th>Side</th><th>Type</th><th>Qty</th><th>Price</th><th>posSide</th><th>oid</th></tr></thead>
           <tbody><tr><td><span class="pill short">SELL</span></td><td class="small">LIMIT</td><td class="mono small">0.003</td><td class="mono small">$78200.00</td><td class="mono small">LONG</td><td class="mono xs">1014894025653</td></tr><tr><td><span class="pill short">SELL</span></td><td class="small">LIMIT</td><td class="mono small">0.002</td><td class="mono small">$78800.00</td><td class="mono small">LONG</td><td class="mono xs">1014894026116</td></tr><tr><td><span class="pill short">SELL</span></td><td class="small">LIMIT</td><td class="mono small">0.002</td><td class="mono small">$79500.00</td><td class="mono small">LONG</td><td class="mono xs">1014894026567</td></tr></tbody></table>
+          <div class="section-label">Conditional Orders (SL — tracked locally; PM has no GET endpoint)</div>
+          <table><thead><tr><th>Plan</th><th>Side</th><th>Type</th><th>Trigger</th><th>posSide</th><th>State</th><th>algoId</th></tr></thead>
+          <tbody><tr><td class="xs">plan_bb_oversold_scout_long</td><td><span class="pill short">SELL</span></td><td class="small">STOP_MARKET</td><td class="mono small">trig $76,200</td><td class="mono small">LONG</td><td class="small pos">active</td><td class="mono xs">4000001342517400</td></tr><tr><td class="xs muted">(orphan)</td><td>—</td><td class="small">algo</td><td class="mono small">—</td><td>—</td><td class="small amber">untracked</td><td class="mono xs">4000001334534657</td></tr></tbody></table>
           <div class="section-label">Recent fills (13)</div>
           <table><thead><tr><th>Time UTC</th><th>Side</th><th>Qty</th><th>Price</th><th>Realized</th></tr></thead>
           <tbody><tr><td class="mono xs">05-18 12:24:18</td><td><span class="pill short">SELL</span></td><td class="mono xs">0.002</td><td class="mono xs">$77500</td><td class="mono xs pos">+$1.09</td></tr><tr><td class="mono xs">05-18 09:02:26</td><td><span class="pill long">BUY</span></td><td class="mono xs">0.010</td><td class="mono xs">$76953.30</td><td class="mono xs muted">—</td></tr><tr><td class="mono xs">05-17 23:40:32</td><td><span class="pill short">SELL</span></td><td class="mono xs">0.008</td><td class="mono xs">$77267.10</td><td class="mono xs neg">$-6.03</td></tr><tr><td class="mono xs">05-17 10:27:50</td><td><span class="pill short">SELL</span></td><td class="mono xs">0.002</td><td class="mono xs">$78500</td><td class="mono xs pos">+$0.96</td></tr><tr><td class="mono xs">05-17 08:28:10</td><td><span class="pill long">BUY</span></td><td class="mono xs">0.010</td><td class="mono xs">$78021.10</td><td class="mono xs muted">—</td></tr><tr><td class="mono xs">05-16 11:09:45</td><td><span class="pill long">BUY</span></td><td class="mono xs">0.005</td><td class="mono xs">$78012.90</td><td class="mono xs neg">$-0.00</td></tr><tr><td class="mono xs">05-16 11:09:44</td><td><span class="pill short">SELL</span></td><td class="mono xs">0.005</td><td class="mono xs">$78012.80</td><td class="mono xs neg">$-0.00</td></tr><tr><td class="mono xs">05-16 11:09:42</td><td><span class="pill short">SELL</span></td><td class="mono xs">0.005</td><td class="mono xs">$78012.80</td><td class="mono xs muted">—</td></tr><tr><td class="mono xs">05-16 11:09:41</td><td><span class="pill long">BUY</span></td><td class="mono xs">0.005</td><td class="mono xs">$78012.90</td><td class="mono xs muted">—</td></tr><tr><td class="mono xs">05-16 11:08:52</td><td><span class="pill short">SELL</span></td><td class="mono xs">0.001</td><td class="mono xs">$78015.20</td><td class="mono xs neg">$-0.00</td></tr><tr><td class="mono xs">05-16 11:08:52</td><td><span class="pill long">BUY</span></td><td class="mono xs">0.001</td><td class="mono xs">$78015.30</td><td class="mono xs muted">—</td></tr><tr><td class="mono xs">05-16 09:25:50</td><td><span class="pill short">SELL</span></td><td class="mono xs">0.001</td><td class="mono xs">$78074.70</td><td class="mono xs neg">$-0.00</td></tr><tr><td class="mono xs">05-16 09:25:49</td><td><span class="pill long">BUY</span></td><td class="mono xs">0.001</td><td class="mono xs">$78074.80</td><td class="mono xs muted">—</td></tr></tbody></table>
           <div class="section-label">Routing config</div>
           <div class="small">Pinned: <span class="mono xs">plan_z_gold_pocket_scout_long, plan_x_top_blow_off_short</span></div>
           <div class="small">Accepts: priorities: <span class='mono'>[&#x27;high&#x27;]</span> · directions: <span class='mono'>[&#x27;long&#x27;, &#x27;short&#x27;]</span></div>
-          <div class="small">Tracked algoIds: <span class="mono xs">4000001334534657, 4000001342517400</span></div>
         </div>
         
         <div class="card">
@@ -111,16 +113,18 @@ th { color:var(--muted); font-weight:600; font-size:10px; text-transform:upperca
           <div class="section-label">Positions</div>
           <table><thead><tr><th>Dir</th><th>Size</th><th>Entry</th><th>uPnL</th><th>Side</th><th>Liq</th></tr></thead>
           <tbody><tr><td colspan="6" class="muted">no positions</td></tr></tbody></table>
-          <div class="section-label">Open Orders (0)</div>
+          <div class="section-label">Open Orders (0) — regular (entry / TPs)</div>
           <table><thead><tr><th>Side</th><th>Type</th><th>Qty</th><th>Price</th><th>posSide</th><th>oid</th></tr></thead>
           <tbody><tr><td colspan="6" class="muted">no open orders</td></tr></tbody></table>
+          <div class="section-label">Conditional Orders (SL — tracked locally; PM has no GET endpoint)</div>
+          <table><thead><tr><th>Plan</th><th>Side</th><th>Type</th><th>Trigger</th><th>posSide</th><th>State</th><th>algoId</th></tr></thead>
+          <tbody><tr><td class="xs muted">(orphan)</td><td>—</td><td class="small">algo</td><td class="mono small">—</td><td>—</td><td class="small amber">untracked</td><td class="mono xs">3000001566174516</td></tr></tbody></table>
           <div class="section-label">Recent fills (4)</div>
           <table><thead><tr><th>Time UTC</th><th>Side</th><th>Qty</th><th>Price</th><th>Realized</th></tr></thead>
           <tbody><tr><td class="mono xs">05-17 23:42:03</td><td><span class="pill short">SELL</span></td><td class="mono xs">0.008</td><td class="mono xs">$76772</td><td class="mono xs neg">$-11.54</td></tr><tr><td class="mono xs">05-17 10:00:16</td><td><span class="pill long">BUY</span></td><td class="mono xs">0.008</td><td class="mono xs">$78214.30</td><td class="mono xs muted">—</td></tr><tr><td class="mono xs">05-16 09:25:52</td><td><span class="pill short">SELL</span></td><td class="mono xs">0.001</td><td class="mono xs">$78044.10</td><td class="mono xs neg">$-0.02</td></tr><tr><td class="mono xs">05-16 09:25:51</td><td><span class="pill long">BUY</span></td><td class="mono xs">0.001</td><td class="mono xs">$78068.10</td><td class="mono xs muted">—</td></tr></tbody></table>
           <div class="section-label">Routing config</div>
           <div class="small">Pinned: <span class="mono xs">plan_o_deeper_pullback_long, plan_d_wedge_target_long</span></div>
           <div class="small">Accepts: priorities: <span class='mono'>[&#x27;watch&#x27;, &#x27;medium&#x27;]</span> · directions: <span class='mono'>[&#x27;long&#x27;, &#x27;short&#x27;]</span></div>
-          <div class="small">Tracked algoIds: <span class="mono xs">3000001566174516</span></div>
         </div>
         
         <div class="card">
@@ -129,7 +133,7 @@ th { color:var(--muted); font-weight:600; font-size:10px; text-transform:upperca
             <span class="muted small">zynerise trading bot 3 · hedge=True · 5x</span>
           </div>
           <div class="kpis">
-            <div><div class="kpi-label">EQUITY</div><div class="kpi-value">$199.56</div></div>
+            <div><div class="kpi-label">EQUITY</div><div class="kpi-value">$199.57</div></div>
             <div><div class="kpi-label">AVAILABLE</div><div class="kpi-value">$78.50</div></div>
           </div>
           <div class="section-label">Active plans (slot → plan)</div>
@@ -137,16 +141,18 @@ th { color:var(--muted); font-weight:600; font-size:10px; text-transform:upperca
           <div class="section-label">Positions</div>
           <table><thead><tr><th>Dir</th><th>Size</th><th>Entry</th><th>uPnL</th><th>Side</th><th>Liq</th></tr></thead>
           <tbody><tr><td colspan="6" class="muted">no positions</td></tr></tbody></table>
-          <div class="section-label">Open Orders (1)</div>
+          <div class="section-label">Open Orders (1) — regular (entry / TPs)</div>
           <table><thead><tr><th>Side</th><th>Type</th><th>Qty</th><th>Price</th><th>posSide</th><th>oid</th></tr></thead>
           <tbody><tr><td><span class="pill long">BUY</span></td><td class="small">LIMIT</td><td class="mono small">0.008</td><td class="mono small">$75700.00</td><td class="mono small">LONG</td><td class="mono xs">1015094195976</td></tr></tbody></table>
+          <div class="section-label">Conditional Orders (SL — tracked locally; PM has no GET endpoint)</div>
+          <table><thead><tr><th>Plan</th><th>Side</th><th>Type</th><th>Trigger</th><th>posSide</th><th>State</th><th>algoId</th></tr></thead>
+          <tbody><tr><td class="xs">plan_cc_deep_oversold_scout_long</td><td><span class="pill short">SELL</span></td><td class="small">STOP_MARKET</td><td class="mono small">trig $74,800</td><td class="mono small">LONG</td><td class="small amber">armed</td><td class="mono xs">1000001686709860</td></tr></tbody></table>
           <div class="section-label">Recent fills (8)</div>
           <table><thead><tr><th>Time UTC</th><th>Side</th><th>Qty</th><th>Price</th><th>Realized</th></tr></thead>
           <tbody><tr><td class="mono xs">05-16 09:16:32</td><td><span class="pill short">SELL</span></td><td class="mono xs">0.001</td><td class="mono xs">$78210.90</td><td class="mono xs neg">$-0.00</td></tr><tr><td class="mono xs">05-16 09:16:30</td><td><span class="pill long">BUY</span></td><td class="mono xs">0.001</td><td class="mono xs">$78211</td><td class="mono xs muted">—</td></tr><tr><td class="mono xs">05-16 09:16:02</td><td><span class="pill short">SELL</span></td><td class="mono xs">0.001</td><td class="mono xs">$78212.90</td><td class="mono xs neg">$-0.00</td></tr><tr><td class="mono xs">05-16 09:16:00</td><td><span class="pill long">BUY</span></td><td class="mono xs">0.001</td><td class="mono xs">$78213</td><td class="mono xs muted">—</td></tr><tr><td class="mono xs">05-16 09:12:45</td><td><span class="pill short">SELL</span></td><td class="mono xs">0.001</td><td class="mono xs">$78320</td><td class="mono xs neg">$-0.00</td></tr><tr><td class="mono xs">05-16 09:12:44</td><td><span class="pill long">BUY</span></td><td class="mono xs">0.001</td><td class="mono xs">$78323.60</td><td class="mono xs muted">—</td></tr><tr><td class="mono xs">05-16 09:12:32</td><td><span class="pill short">SELL</span></td><td class="mono xs">0.001</td><td class="mono xs">$78331</td><td class="mono xs neg">$-0.00</td></tr><tr><td class="mono xs">05-16 09:12:31</td><td><span class="pill long">BUY</span></td><td class="mono xs">0.001</td><td class="mono xs">$78331.10</td><td class="mono xs muted">—</td></tr></tbody></table>
           <div class="section-label">Routing config</div>
           <div class="small">Pinned: <span class="mono xs">plan_c_fib_pullback_long, deep_water_tier1, plan_aa_breakdown_acceleration_short</span></div>
           <div class="small">Accepts: priorities: <span class='mono'>[&#x27;watch&#x27;, &#x27;medium&#x27;]</span> · directions: <span class='mono'>[&#x27;long&#x27;, &#x27;short&#x27;]</span></div>
-          <div class="small">Tracked algoIds: <span class="mono xs">1000001686709860</span></div>
         </div>
         
 </div>
