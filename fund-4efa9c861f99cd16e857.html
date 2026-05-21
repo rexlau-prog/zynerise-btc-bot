@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="60">
+<title>Angela — Fund Statement</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<style>
+:root { --bg:#0b1020; --card:#141b2e; --text:#e6ebf5; --muted:#8b97b0;
+        --border:#243049; --green:#22c55e; --red:#ef4444; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--text);
+        font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",Roboto,sans-serif; }
+.wrap { max-width:820px; margin:0 auto; padding:24px; }
+h1 { font-size:22px; margin:0 0 2px; }
+.sub { color:var(--muted); font-size:13px; margin-bottom:20px; }
+.kpis { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:20px; }
+.kpi { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; }
+.kpi .lbl { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.06em; }
+.kpi .val { font-size:24px; font-weight:700; margin-top:6px; }
+.pos { color:var(--green); } .neg { color:var(--red); }
+.card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; margin-bottom:16px; }
+table { width:100%; border-collapse:collapse; font-size:14px; }
+td { padding:8px 4px; border-bottom:1px solid var(--border); }
+td.r { text-align:right; font-variant-numeric:tabular-nums; }
+.foot { color:var(--muted); font-size:11px; margin-top:18px; line-height:1.5; }
+</style></head>
+<body><div class="wrap">
+  <h1>Angela</h1>
+  <div class="sub">BTC Strategy Fund — personal statement · updated 2026-05-21T16:31:20Z · auto-refresh 60s</div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="lbl">Your Contribution</div><div class="val">$1,280.00</div></div>
+    <div class="kpi"><div class="lbl">Current Value</div><div class="val">$1,279.98</div></div>
+    <div class="kpi"><div class="lbl">Profit / Loss</div><div class="val neg">$-0.02<br><span style="font-size:15px">-0.00%</span></div></div>
+  </div>
+
+  <div class="card">
+    <div style="color:var(--muted);font-size:12px;margin-bottom:6px;">Value over time</div>
+    <div id="chart" style="height:300px;"></div>
+  </div>
+
+  <div class="card">
+    <table>
+      <tr><td>Units held</td><td class="r">1,280.00</td></tr>
+      <tr><td>NAV per unit</td><td class="r">$1.0000</td></tr>
+      <tr><td>Contribution</td><td class="r">$1,280.00</td></tr>
+      <tr><td>Current value</td><td class="r">$1,279.98</td></tr>
+      <tr><td>Unrealized P/L</td><td class="r neg">$-0.02 (-0.00%)</td></tr>
+    </table>
+  </div>
+
+  <div class="foot">
+    Figures are computed from live exchange account equity (NAV/unit model) and update automatically.
+    Past performance does not guarantee future results; crypto positions can lose value.
+    This statement is for the named investor only.
+  </div>
+</div>
+<script>
+  var x = ["2026-05-21T16:31:20Z"], y = [1279.98];
+  Plotly.newPlot('chart', [{
+    x:x, y:y, type:'scatter', mode:'lines', fill:'tozeroy',
+    line:{color:'#22c55e', width:2}, fillcolor:'rgba(34,197,94,0.08)',
+    hovertemplate:'%{x|%b %d %H:%M}<br>$%{y:,.2f}<extra></extra>'
+  }], {
+    margin:{l:55,r:12,t:8,b:32}, paper_bgcolor:'rgba(0,0,0,0)',
+    plot_bgcolor:'rgba(0,0,0,0)', font:{color:'#8b97b0',size:11},
+    xaxis:{gridcolor:'#243049'}, yaxis:{gridcolor:'#243049',tickprefix:'$'}
+  }, {displayModeBar:false, responsive:true});
+</script>
+</body></html>
