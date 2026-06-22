@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BTC Trading Bot — Strategy Performance</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<style>
+  :root {
+    --bg: #f7f8fa;
+    --card: #ffffff;
+    --text: #0f172a;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --green: #16a34a;
+    --green-bg: #f0fdf4;
+    --red: #dc2626;
+    --red-bg: #fef2f2;
+    --blue: #2563eb;
+    --amber: #d97706;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px 64px;
+  }
+  header {
+    margin-bottom: 32px;
+    position: relative;
+  }
+  h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    padding-right: 100px;
+  }
+  .subtitle {
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .lang-toggle {
+    position: absolute;
+    top: 4px;
+    right: 0;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text);
+    font-family: inherit;
+    transition: background 0.1s, border-color 0.1s;
+  }
+  .lang-toggle:hover { background: #f1f5f9; border-color: #cbd5e1; }
+  .lang-toggle:active { background: #e2e8f0; }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+  }
+  .stat-label {
+    color: var(--muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+  .stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .stat-sub {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  .pos { color: var(--green); }
+  .neg { color: var(--red); }
+  .chart-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+  .chart-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .chart-sub {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 16px;
+  }
+  .chart {
+    width: 100%;
+    min-height: 320px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  th {
+    font-weight: 600;
+    background: #f9fafb;
+    color: var(--muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    position: sticky;
+    top: 0;
+  }
+  tr:hover { background: #f9fafb; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .pill.long { background: var(--green-bg); color: var(--green); }
+  .pill.short { background: var(--red-bg); color: var(--red); }
+  .pill.tp { background: var(--green-bg); color: var(--green); }
+  .pill.sl { background: var(--red-bg); color: var(--red); }
+  .pill.open { background: #fffbeb; color: var(--amber); }
+  .tp-dots span {
+    display: inline-block;
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--border);
+    margin-right: 3px;
+    vertical-align: middle;
+  }
+  .tp-dots span.hit { background: var(--green); }
+  .table-wrap {
+    overflow-x: auto;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  footer {
+    margin-top: 32px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  footer h3 {
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 8px;
+  }
+  code {
+    background: #eef2f7;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <button class="lang-toggle" id="langToggle" type="button" onclick="toggleLang()">中文</button>
+  <h1><span data-en="BTC Trading Bot — Strategy Performance" data-zh="BTC 交易机器人 — 策略表现">BTC Trading Bot — Strategy Performance</span></h1>
+  <div class="subtitle"><span data-en="2026-04-10 00:00 UTC → 2026-06-22 04:00 UTC &amp;nbsp;·&amp;nbsp; 73 days &amp;nbsp;·&amp;nbsp; 37 trades &amp;nbsp;·&amp;nbsp; $10,000 starting capital &amp;nbsp;·&amp;nbsp; all trades on real-time Binance BTCUSDT perpetual prices" data-zh="2026-04-10 00:00 UTC → 2026-06-22 04:00 UTC &amp;nbsp;·&amp;nbsp; 73 天 &amp;nbsp;·&amp;nbsp; 37 笔交易 &amp;nbsp;·&amp;nbsp; 初始资金 $10,000 &amp;nbsp;·&amp;nbsp; 所有交易基于 Binance BTCUSDT 永续合约实时价格">2026-04-10 00:00 UTC → 2026-06-22 04:00 UTC &nbsp;·&nbsp; 73 days &nbsp;·&nbsp; 37 trades &nbsp;·&nbsp; $10,000 starting capital &nbsp;·&nbsp; all trades on real-time Binance BTCUSDT perpetual prices</span></div>
+</header>
+
+<div class="stats-grid">
+<div class="card"><div class="stat-label"><span data-en="Total Return" data-zh="总回报">Total Return</span></div><div class="stat-value"><span class="pos">+$10,612</span></div><div class="stat-sub"><span data-en="+106.12% on $10,000" data-zh="+106.12% 基于 $10,000">+106.12% on $10,000</span></div></div>
+<div class="card"><div class="stat-label"><span data-en="APR (simple)" data-zh="年化 (简单)">APR (simple)</span></div><div class="stat-value"><span class="pos">529%</span></div><div class="stat-sub"><span data-en="annualized from 73-day window" data-zh="由 73 天窗口线性年化">annualized from 73-day window</span></div></div>
+<div class="card"><div class="stat-label"><span data-en="Max Drawdown" data-zh="最大回撤">Max Drawdown</span></div><div class="stat-value"><span class="neg">-21.79%</span></div><div class="stat-sub"><span data-en="$-5,742" data-zh="$-5,742">$-5,742</span></div></div>
+<div class="card"><div class="stat-label"><span data-en="# Trades" data-zh="交易笔数"># Trades</span></div><div class="stat-value">37</div><div class="stat-sub"><span data-en="17W / 18L / 2BE" data-zh="17 胜 / 18 负 / 2 平">17W / 18L / 2BE</span></div></div>
+<div class="card"><div class="stat-label"><span data-en="Win Rate" data-zh="胜率">Win Rate</span></div><div class="stat-value">48.6%</div><div class="stat-sub"><span data-en="17 of 35 decided trades" data-zh="17 / 共 35 笔已决出">17 of 35 decided trades</span></div></div>
+<div class="card"><div class="stat-label"><span data-en="Profit Factor" data-zh="盈亏比">Profit Factor</span></div><div class="stat-value">1.61</div><div class="stat-sub"><span data-en="avg win $1,651 / avg loss $970" data-zh="平均盈利 $1,651 / 平均亏损 $970">avg win $1,651 / avg loss $970</span></div></div>
+</div>
+
+<div class="chart-card">
+  <div class="chart-title"><span data-en="Equity Curve" data-zh="净值曲线">Equity Curve</span></div>
+  <div class="chart-sub"><span data-en="Cumulative balance over time, plotted at each trade&#x27;s entry. Hover for trade details." data-zh="账户净值随时间变化,以每笔交易的入场时间为节点。鼠标悬停查看交易详情。">Cumulative balance over time, plotted at each trade's entry. Hover for trade details.</span></div>
+  <div id="equity_chart" class="chart"></div>
+</div>
+
+<div class="chart-card">
+  <div class="chart-title"><span data-en="Drawdown" data-zh="回撤">Drawdown</span></div>
+  <div class="chart-sub"><span data-en="Percentage drawdown from running peak equity." data-zh="相对历史净值高点的百分比回撤。">Percentage drawdown from running peak equity.</span></div>
+  <div id="dd_chart" class="chart"></div>
+</div>
+
+<div class="chart-card">
+  <div class="chart-title"><span data-en="Per-Trade PnL" data-zh="单笔盈亏">Per-Trade PnL</span></div>
+  <div class="chart-sub"><span data-en="Realized PnL per trade. Green = profit, red = loss." data-zh="每笔交易的已实现盈亏。绿色 = 盈利,红色 = 亏损。">Realized PnL per trade. Green = profit, red = loss.</span></div>
+  <div id="bars_chart" class="chart"></div>
+</div>
+
+<h2 style="margin: 32px 0 12px; font-size: 18px;"><span data-en="Trade Details" data-zh="交易明细">Trade Details</span></h2>
+<div class="table-wrap">
+<table>
+  <thead><tr>
+    <th>#</th>
+    <th><span data-en="Entry Time (UTC)" data-zh="入场时间 (UTC)">Entry Time (UTC)</span></th>
+    <th><span data-en="Plan" data-zh="计划">Plan</span></th>
+    <th><span data-en="Dir" data-zh="方向">Dir</span></th>
+    <th class="num"><span data-en="Entry Px" data-zh="入场价">Entry Px</span></th>
+    <th class="num"><span data-en="Stop" data-zh="止损">Stop</span></th>
+    <th><span data-en="TPs" data-zh="止盈">TPs</span></th>
+    <th class="num"><span data-en="Qty (BTC)" data-zh="数量 (BTC)">Qty (BTC)</span></th>
+    <th class="num"><span data-en="Notional" data-zh="名义价值">Notional</span></th>
+    <th class="num"><span data-en="Realized PnL" data-zh="已实现盈亏">Realized PnL</span></th>
+    <th class="num"><span data-en="% on $10k" data-zh="$10k 收益率">% on $10k</span></th>
+    <th><span data-en="Outcome" data-zh="结果">Outcome</span></th>
+  </tr></thead>
+  <tbody>
+<tr><td>1</td><td>2026-04-10 00:00 UTC</td><td>plan_hist_0410_long</td><td><span class="pill long"><span data-en="LONG" data-zh="多头">LONG</span></span></td><td class="num">$70,400</td><td class="num">$0</td><td><span class="tp-dots"><span class="hit" title="$74,200 (hit)"></span></span></td><td class="num">1.0000</td><td class="num">$70,400</td><td class="num"><span class="pos">+$3,800.00</span></td><td class="num"><span class="pos">+38.00%</span></td><td><span class="pill tp"><span data-en="TP CLOSE" data-zh="止盈平仓">TP CLOSE</span></span></td></tr>
+<tr><td>2</td><td>2026-04-12 00:00 UTC</td><td>plan_hist_0412_short</td><td><span class="pill short"><span data-en="SHORT" data-zh="空头">SHORT</span></span></td><td class="num">$78,500</td><td class="num">$0</td><td><span class="tp-dots"><span class="hit" title="$75,800 (hit)"></span></span></td><td class="num">1.0000</td><td class="num">$78,500</td><td class="num"><span class="pos">+$2,700.00</span></td><td class="num"><span class="pos">+27.00%</span></td><td><span class="pill tp"><span data-en="TP CLOSE" data-zh="止盈平仓">TP CLOSE</span></span></td></tr>
+<tr><td>3</td><td>2026-04-15 00:00 UTC</td><td>plan_hist_0415_long</td><td><span class="pill long"><span data-en="LONG" data-zh="多头">LONG</span></span></td><td class="num">$73,800</td><td class="num">$72,880</td><td><span class="tp-dots"></span></td><td class="num">1.0000</td><td class="num">$73,800</td><td class="num"><span class="neg">$-920.00</span></td><td class="num"><span class="neg">-9.20%</span></td><td><span class="pill sl"><span data-en="SL HIT" data-zh="止损触发">SL HIT</span></span></td></tr>
+<tr><td>4</td><td>2026-04-16 00:00 UTC</td><td>plan_hist_0416_short</td><td><span class="pill short"><span data-en="SHORT" data-zh="空头">SHORT</span></span></td><td class="num">$78,200</td><td class="num">$0</td><td><span class="tp-dots"><span class="hit" title="$77,130 (hit)"></span></span></td><td class="num">1.0000</td><td class="num">$78,200</td><td class="num"><span class="pos">+$1,065.60</span></td><td class="num"><span class="pos">+10.66%</span></td><td><span class="pill tp"><span data-en="TP CLOSE" data-zh="止盈平仓">TP CLOSE</span></span></td></tr>
+<tr><td>5</td><td>2026-04-16 13:19 UTC</td><td>plan_c_vah_rejection_short</td><td><span class="pill short"><span data-en="SHORT" data-zh="空头">SHORT</span></span></td><td class="num">$74,844</td><td class="num">$75,800</td><td><span class="tp-dots"><span class="hit" title="$73,500 (hit)"></span><span class="" title="$73,000"></span></span></td><td class="num">0.1000</td><td class="num">$7,484</td><td class="num"><span class="pos">+$19.40</span></td><td class="num"><span class="pos">+0.19%</span></td><td><span class="pill sl"><span data-en="SL HIT" data-zh="止损触发">SL HIT</span></span></td></tr>
+<tr><td>6</td><td>2026-04-20 03:20 UTC</td><td>plan_b_ema100_reaction_long</td><td><span class="pill long"><span data-en="LONG" data-zh="多头">LONG</span></span></td><td class="num">$74,384</td><td class="num">$73,500</td><td><span class="tp-dots"><span class="hit" title="$75,500 (hit)"></span><span class="hit" title="$76,200 (hit)"></span><span class="hit" title="$77,030 (hit)"></span></span></td><td class="num">1.0000</td><td class="num">$74,384</td><td class="num"><span class="pos">+$1,743.50</span></td><td class="num"><span class="pos">+17.44%</span></td><td><span class="pill tp"><span data-en="TP CLOSE" data-zh="止盈平仓">TP CLOSE</span></span></td></tr>
+<tr><td>7</td><td>2026-04-21 13:00 UTC</td><td>plan_e_breakout_long</td><td><span class="pill long"><span data-en="LONG" data-zh="多头">LONG</span></span></td><td class="num">$75,996</td><td class="num">$75,200</td><td><span class="tp-dots"><span class="" title="$76,500"></span><span class="" title="$77,030"></span><span class="" title="$77,500"></span></span></td><td class="num">1.0000</td><td class="num">$75,996</td><td class="num"><span class="neg">$-796.10</span></td><td class="num"><span class="neg">-7.96%</span></td><td><span class="pill sl"><span data-en="SL HIT" data-zh="止损触发">SL HIT</span></span></td></tr>
+<tr><td>8</td><td>2026-04-22 12:03 UTC</td><td>plan_a_htf_rejection_short</td><td><span class="pill short"><span data-en="SHORT" data-zh="空头">SHORT</span></span></td><td class="num">$78,302</td><td class="num">$79,400</td><td><span class="tp-dots"><span class="" title="$77,500"></span><span class="" title="$76,500"></span><span class="" title="$74,500"></span><span class="" title="$73,400"></span></span></td><td class="num">1.0000</td><td class="num">$78,302</td><td class="num"><span class="neg">$-1,098.40</span></td><td class="num"><span class="neg">-10.98%</span></td><td><span class="pill sl"><span data-en="SL HIT" data-zh="止损触发">SL HIT</span></span></td></tr>
+<tr><td>9</td><td>2026-04-27 05:14 UTC</td><td>plan_a3_pullback_long</td><td><span class="pill long"><span data-en="LONG" data-zh="多头">LONG</span></span></td><td class="num">$78,449</td><td class="num">$77,200</td><td><span class="tp-dots"><span class="" title="$79,000"></span><span class="" title="$79,800"></span><span class="" title="$80,800"></span><span class="" title="$81,500"></span></span></td><td class="num">1.0000</td><td class="num">$78,449</td><td class="num"><span class="neg">$-1,249.40</span></td><td class="num"><span class="neg">-12.49%</span></td><td><span class="pill sl"><span data-en="SL HIT" data-zh="止损触发">SL HIT</span></span></td></tr>
+<tr><td>10</td><td>2026-04-29 04:00 UTC</td><td>plan_a5_reclaim_long</td><td><span class="pill long"><span data-en="LONG" data-zh="多头">LONG</span></span></td><td class="num">$76,983</td><td class="num">$76,200</td><td><span class="tp-dots"><span class="hit" title="$77,800 (hit)"></span><span class="" title="$78,400"></span><span class="" title="$79,200"></span><span class="" title="$80,000"></span></span></td><td class="num">2.0000</td><td class="num">$153,966</td><td class="num"><span class="neg">$-446.10</span></td><td class="num"><span class="neg">-4.46%</span></td><td><span class="pill sl"><span data-en="SL HIT" data-zh="止损触发">SL HIT</span></span></td></tr>
+<tr><td>11</td><td>2026-04-29 17:00 UTC</td><td>plan_g_v2_fib_long</td><td><span class="pill long"><span data-en="LONG" data-zh="多头">LONG</span></span></td><td class="num">$75,780</td><td class="num">$74,300</td><td><span class="tp-dots"><span class="hit" title="$76,500 (hit)"></span><span class="hit" title="$77,300 (hit)"></span><span class="hit" title="$78,000 (hit)"></span><span class="hit" title="$79,000 (hit)"></span></span></td><td class="num">1.0000</td><td class="num">$75,780</td><td class="num"><span class="pos">+$1,510.10</span></td><td class="num"><span class="pos">+15.10%</span></td><td><span class="pill tp"><span data-en="TP CLOSE" data-zh="止盈平仓">TP CLOSE</span></span></td></tr>
+<tr><td>12</td><td>2026-05-01 02:00 UTC</td><td>plan_a6_reclaim_long</td><td><span class="pill long"><span data-en="LONG" data-zh="多头">LONG</span></span></td><td class="num">$76,646</td><td class="num">$75,800</td><td><span class="tp-dots"><span class="hit" title="$77,500 (hit)"></span><span class="hit" title="$78,000 (hit)"></span><span class="hit" title="$78,500 (hit)"></span><span class="hit" title="$79,000 (hit)"></span></span></td><td class="num">1.0000</td><td class="num">$76,646</td><td class="num"><span class="pos">+$1,404.10</span></td><td class="num"><span class="pos">+14.04%</span></td><td><span class="pill tp"><span data-en="TP CLOSE" data-zh="止盈平仓">TP CLOSE</span></span></td></tr>
+<tr><td>13</td><td>2026-05-06 12:00 UTC</td><td>plan_l_log_fib_top_short</td><td><span class="pill short"><span data-en="SHORT" data-zh="空头">SHORT</span></span></td><td class="num">$82,489</td><td class="num">$83,800</td><td><span class="tp-dots"><span class="hit" title="$80,800 (hit)"></span><span class="hit" title="$80,000 (hit)"></span><span class="hit" title="$78,800 (hit)"></span><span class="hit" title="$77,500 (hit)"></span></span></td><td class="num">1.0000</td><td class="num">$82,489</td><td class="num"><span class="pos">+$2,923.70</span></td><td class="num"><span class="pos">+29.24%</span></td><td><span class="pill tp"><span data-en="TP CLOSE" data-zh="止盈平仓">TP CLOSE</span></span></td></tr>
+<tr><td>14</td><td>2026-05-08 02:55 UTC</td><td>plan_p_oversold_bounce_long</td><td><span class="pill long"><span data-en="LONG" data-zh="多头">LONG</span></span></td><td class="num">$79,484</td><td class="num">$78,700</td><td><span class="tp-dots"><span class="hit" title="$80,000 (hit)"></span><span class="hit" title="$80,500 (hit)"></span><span class="hit" title="$81,000 (hit)"></span><span class="hit" title="$81,500 (hit)"></span></span></td><td class="num">1.0000</td><td class="num">$79,484</td><td class="num"><span class="pos">+$1,141.10</span></td><td class="num"><span class="pos">+11.41%</span></td><td><span class="pill tp"><span data-en="TP CLOSE" data-zh="止盈平仓">TP CLOSE</span></span></td></tr>
+<tr><td>15</td><td>2026-05-11 18:00 UTC</td><td>plan_r_resistance_short</td><td><span class="pill short"><span data-en="SHORT" data-zh="空头">SHORT</span></span></td><td class="num">$81,869</td><td class="num">$82,800</td><td><span class="tp-dots"><span class="hit" title="$80,800 (hit)"></span><span class="hit" title="$80,000 (hit)"></span><span class="hit" title="$79,200 (hit)"></span><span class="hit" title="$78,800 (hit)"></span></span></td><td class="num">1.0000</td><td class="num">$81,869</td><td class="num"><span class="pos">+$2,008.80</span></td><td class="num"><span class="pos">+20.09%</span></td><td><span class="pill tp"><span data-en="TP CLOSE" data-zh="止盈平仓">TP CLOSE</span></span></td></tr>
+<tr><td>16</td><td>2026-05-13 00:00 UTC</td><td>plan_t_breakdown_short</td><td><span class="pill short"><span data-en="SHORT" data-zh="空头">SHORT</span></span></td><td class="num">$80,461</td><td class="num">$81,500</td><td><span class="tp-dots"><span class="hit" title="$79,283 (hit)"></span><span class="hit" title="$78,800 (hit)"></span><span class="" title="$77,500"></span><span class="" title="$76,572"></span></span></td><td class="num">1.0000</td><td class="num">$80,461</td><td class="num"><span class="pos">+$436.00</span></td><td class="num"><span class="pos">+4.36%</span></td><td><span class="pill sl"><span data-en="SL HIT" data-zh="止损触发">SL HIT</span></span></td></tr>
+<tr><td>17</td><td>2026-05-14 16:59 UTC</td><td>plan_v_resistance_fade_short</td><td><span class="pill short"><span data-en="SHORT" data-zh="空头">SHORT</span></span></td><td class="num">$81,812</td><td class="num">$82,800</td><td><span class="tp-dots"><span class="hit" title="$80,800 (hit)"></span><span class="hit" title="$80,000 (hit)"></span><span class="hit" title="$79,200 (hit)"></span><span class="hit" title="$78,500 (hit)"></span></span></td><td class="num">1.0000</td><td class="num">$81,812</td><td class="num"><span class="pos">+$2,111.60</span></td><td class="num"><span class="pos">+21.12%</span></td><td><span class="pill tp"><span data-en="TP CLOSE" data-zh="止盈平仓">TP CLOSE</span></span></td></tr>
+<tr><td>18</td><td>2026-05-17 08:03 UTC</td><td>plan_z_gold_pocket_scout_long</td><td><span class="pill long"><span data-en="LONG" data-zh="多头">LONG</span></span></td><td class="num">$78,127</td><td class="num">$77,400</td><td><span class="tp-dots"><span class="hit" title="$78,500 (hit)"></span><span class="" title="$79,200"></span><span class="" title="$80,000"></span><span class="" title="$81,000"></span></span></td><td class="num">1.0000</td><td class="num">$78,127</td><td class="num"><span class="neg">$-452.10</span></td><td class="num"><span class="neg">-4.52%</span></td><td><span class="pill sl"><span data-en="SL HIT" data-zh="止损触发">SL HIT</span></span></td></tr>
+<tr><td>19</td><td>2026-05-17 10:00 UTC</td><td>plan_o_deeper_pullback_long</td><td><span class="pill long"><span data-en="LONG" data-zh="多头">LONG</span></span></td><td class="num">$78,214</td><td class="num">$76,800</td><td><span class="tp-dots"><span class="" title="$79,200"></span><span class="" title="$80,000"></span><span class="" title="$80,800"></span><span class="" title="$81,500"></span></span></td><td class="num">0.8000</td><td class="num">$62,571</td><td class="num"><span class="neg">$-1,131.44</span></td><td class="num"><span class="neg">-11.31%</span></td><td><span class="pill sl"><span data-en="SL HIT" data-zh="止损触发">SL HIT</span></span></td></tr>
+<tr><td>20</td><td>2026-05-18 09:02 UTC</td><td>plan_bb_oversold_scout_long</td><td><span class="pill long"><span data-en="LONG" data-zh="多头">LONG</span></span></td><td class="num">$76,967</td><td class="num">$76,200</td><td><span class="tp-dots"><span class="hit" title="$77,500 (hit)"></span><span class="" title="$78,200"></span><span class="" title="$78,800"></span><span class="" title="$79,500"></span></span></td><td class="num">1.0000</td><td class="num">$76,967</td><td class="num"><span class="neg">$-442.30</span></td><td class="num"><span class="neg">-4.42%</span></td><td><span class="pill sl"><span data-en="SL HIT" data-zh="止损触发">SL HIT</span></span></td></tr>
+<tr><td>21</td><td>2026-05-19 14:34 UTC</td><td>plan_dd_oversold_scout_v2_long</td><td><span class="pill long"><span data-en="LONG" data-zh="多头">LONG</span></span></td><td class="num">$76,280</td><td class="num">$76,280</td><td><span class="tp-dots"><span class="hit" title="$76,800 (hit)"></span><span class="hit" title="$77,400 (hit)"></span><span class="" title="$78,200"></span><span class="" title="$79,000"></span></span></td><td class="num">1.0000</td><td class="num">$76,280</td><td class="num"><span class="pos">+$994.60</span></td><td class="num"><span class="pos">+9.95%</span></td><td><span class="pill"><span data-en="CLOSED" data-zh="已平仓">CLOSED</span></span></td></tr>
+<tr><td>22</td><td>2026-05-22 14:04 UTC</td><td>plan_gg_pullback_retrace_long</td><td><span class="pill long"><span data-en="LONG" data-zh="多头">LONG</span></span></td><td class="num">$77,100</td><td class="num">$76,400</td><td><span class="tp-dots"><span class="hit" title="$77,600 (hit)"></span><span class="" title="$78,000"></span><span class="" title="$78,500"></span><span class="" title="$79,000"></span></span></td><td class="num">0.9000</td><td class="num">$69,390</td><td class="num"><span class="neg">$-630.00</span></td><td class="num"><span class="neg">-6.30%</span></td><td><span class="pill sl"><span data-en="SL HIT" data-zh="止损触发">SL HIT</span></span></td></tr>
+<tr><td>23</td><td>2026-05-23 06:37 UTC</td><td>plan_ff_oversold_scout_v4_long</td><td><span class="pill long"><span data-en="LONG" data-zh="多头">LONG</span></span></td><td class="num">$75,385</td><td class="num">$74,300</td><td><span class="tp-dots"><span class="hit" title="$76,400 (hit)"></span><span class="" title="$77,000"></span><span class="" title="$77,800"></span><span class="" title="$78,500"></span></span></td><td class="num">1.0000</td><td class="num">$75,385</td><td class="num"><span class="neg">$-1,085.00</span></td><td class="num"><span class="neg">-10.85%</span></td><td><span class="pill sl"><span data-en="SL HIT" data-zh="止损触发">SL HIT</span></span></td></tr>
+<tr><td>24</td><td>2026-05-23 07:51 UTC</td><td>plan_ii_wave5_extension_scout_long</td><td><span class="pill long"><span data-en="LONG" data-zh="多头">LONG</span></span></td><td class="num">$74,285</td><td class="num">$74,285</td><td><span class="tp-dots"><span class="hit" title="$75,500 (hit)"></span><span class="hit" title="$76,400 (hit)"></span><span class="hit" title="$77,500 (hit)"></span><span class="" title="$78,500"></span></span></td><td class="num">0.9000</td><td class="num">$66,857</td><td class="num"><span class="pos">+$1,583.71</span></td><td class="num"><span class="pos">+15.84%</span></td><td><span class="pill sl"><span data-en="SL HIT" data-zh="止损触发">SL HIT</span></span></td></tr>
+<tr><td>25</td><td>2026-05-25 10:00 UTC</td><td>plan_jj_breakout_continuation_long_scout</td><td><span class="pill long"><span data-en="LONG" data-zh="多头">LONG</span></span></td><td class="num">$77,570</td><td class="num">$76,400</td><td><span class="tp-dots"><span class="hit" title="$78,180 (hit)"></span><span class="" title="$78,500"></span><span class="" title="$79,000"></span><span class="" title="$79,800"></span></span></td><td class="num">0.9000</td><td class="num">$69,813</td><td class="num"><span class="neg">$-1,053.09</span></td><td class="num"><span class="neg">-10.53%</span></td><td><span class="pill sl"><span data-en="SL HIT" data-zh="止损触发">SL HIT</span></span></td></tr>
+<tr><td>26</td><td>2026-05-27 04:18 UTC</td><td>plan_kk_abc_b_wave_pullback_long</td><td><span class="pill long"><span data-en="LONG" data-zh="多头">LONG</span></span></td><td class="num">$75,498</td><td class="num">$74,700</td><td><span class="tp-dots"><span class="hit" title="$76,500 (hit)"></span><span class="" title="$77,200"></span><span class="" title="$77,888"></span><span class="" title="$78,500"></span></span></td><td class="num">1.0000</td><td class="num">$75,498</td><td class="num"><span class="neg">$-797.60</span></td><td class="num"><span class="neg">-7.98%</span></td><td><span class="pill sl"><span data-en="SL HIT" data-zh="止损触发">SL HIT</span></span></td></tr>
+<tr><td>27</td><td>2026-05-28 14:19 UTC</td><td>plan_nn_breakdown_acceleration_short_v7</td><td><span class="pill short"><span data-en="SHORT" data-zh="空头">SHORT</span></span></td><td class="num">$73,509</td><td class="num">$74,500</td><td><span class="tp-dots"><span class="hit" title="$73,000 (hit)"></span><span class="hit" title="$72,500 (hit)"></span><span class="hit" title="$71,500 (hit)"></span><span class="hit" title="$70,400 (hit)"></span></span></td><td class="num">0.6000</td><td class="num">$44,106</td><td class="num"><span class="pos">+$854.64</span></td><td class="num"><span class="pos">+8.55%</span></td><td><span class="pill tp"><span data-en="TP CLOSE" data-zh="止盈平仓">TP CLOSE</span></span></td></tr>
+<tr><td>28</td><td>2026-06-01 12:11 UTC</td><td>plan_c_fib_pullback_long_v3</td><td><span class="pill long"><span data-en="LONG" data-zh="多头">LONG</span></span></td><td class="num">$71,866</td><td class="num">$70,000</td><td><span class="tp-dots"><span class="hit" title="$73,000 (hit)"></span><span class="" title="$74,000"></span><span class="" title="$75,000"></span><span class="" title="$76,000"></span></span></td><td class="num">0.6000</td><td class="num">$43,120</td><td class="num"><span class="neg">$-1,119.84</span></td><td class="num"><span class="neg">-11.20%</span></td><td><span class="pill sl"><span data-en="SL HIT" data-zh="止损触发">SL HIT</span></span></td></tr>
+<tr><td>29</td><td>2026-06-04 00:25 UTC</td><td>plan_uu_lower_capitulation_long</td><td><span class="pill long"><span data-en="LONG" data-zh="多头">LONG</span></span></td><td class="num">$63,987</td><td class="num">$62,300</td><td><span class="tp-dots"><span class="hit" title="$65,500 (hit)"></span><span class="" title="$66,800"></span><span class="" title="$68,000"></span><span class="" title="$68,340"></span></span></td><td class="num">0.6000</td><td class="num">$38,392</td><td class="num"><span class="neg">$-1,012.38</span></td><td class="num"><span class="neg">-10.12%</span></td><td><span class="pill sl"><span data-en="SL HIT" data-zh="止损触发">SL HIT</span></span></td></tr>
+<tr><td>30</td><td>2026-06-05 14:06 UTC</td><td><span title="$60.0-$60.5K 深水伏击 long (✅ 6/5 14:06 UTC 已成交 @ $60,450.9 1.0 BTC — 扛过 $59,080/$59,451 全部洗盘存活, 更高低点结构生效; SL $58,200 不上移, TP1 $63,600 = 第一供给带前沿机械止盈; 6/7 晨浮盈 ~+$1,030)">deep_water_tier0</span></td><td><span class="pill long"><span data-en="LONG" data-zh="多头">LONG</span></span></td><td class="num">$60,451</td><td class="num">$58,200</td><td><span class="tp-dots"><span class="hit" title="$63,600 (hit)"></span><span class="hit" title="$66,000 (hit)"></span><span class="" title="$68,300"></span><span class="" title="$70,000"></span></span></td><td class="num">1.0000</td><td class="num">$60,451</td><td class="num"><span class="pos">+$2,609.46</span></td><td class="num"><span class="pos">+26.09%</span></td><td><span class="pill open"><span data-en="PARTIAL/OPEN" data-zh="部分平仓/持仓">PARTIAL/OPEN</span></span></td></tr>
+<tr><td>31</td><td>2026-06-05 19:00 UTC</td><td><span title="$58.8-$59.8K 决战线失守接力 short (❌ 6/5 已止损完结: V 形逼空击穿 SL $61,200, -$1,831.30)">plan_ww_60k_breakdown_short</span></td><td><span class="pill short"><span data-en="SHORT" data-zh="空头">SHORT</span></span></td><td class="num">$59,369</td><td class="num">$61,200</td><td><span class="tp-dots"><span class="" title="$57,800"></span><span class="" title="$55,700"></span><span class="" title="$53,500"></span><span class="" title="$50,500"></span></span></td><td class="num">1.0000</td><td class="num">$59,369</td><td class="num"><span class="neg">$-1,831.30</span></td><td class="num"><span class="neg">-18.31%</span></td><td><span class="pill sl"><span data-en="SL HIT" data-zh="止损触发">SL HIT</span></span></td></tr>
+<tr><td>32</td><td>2026-06-08 00:26 UTC</td><td><span title="$63.4-$64.4K 区间顶 fade short (❌ 6/14 已止损完结, 整笔 -$1,679.77)">plan_xx_relief_rally_fade_short</span></td><td><span class="pill short"><span data-en="SHORT" data-zh="空头">SHORT</span></span></td><td class="num">$63,417</td><td class="num">$65,600</td><td><span class="tp-dots"><span class="hit" title="$62,000 (hit)"></span><span class="" title="$60,500"></span><span class="" title="$59,200"></span><span class="" title="$57,800"></span></span></td><td class="num">1.5000</td><td class="num">$95,126</td><td class="num"><span class="neg">$-1,679.77</span></td><td class="num"><span class="neg">-16.80%</span></td><td><span class="pill sl"><span data-en="SL HIT" data-zh="止损触发">SL HIT</span></span></td></tr>
+<tr><td>33</td><td>2026-06-15 12:00 UTC</td><td><span title="$66.2K VAH/POC 翻阻 fade short (✅ 6/15 触发 0.6 BTC @ $66,204.5; ✅ TP1 $64,900 + TP2 $64,050 (6/17) + TP3 $62,400 (6/18) 三档兑现 = +$1,163.64; 余 0.107 BTC 持仓中·浮盈 ~+$296, SL $67,600 — 战术对冲腿, 余 TP4 $60,500; 两根 1H 带量收上 $67,600 即认输)">plan_vv_broken_shelf_fade_short</span></td><td><span class="pill short"><span data-en="SHORT" data-zh="空头">SHORT</span></span></td><td class="num">$66,204</td><td class="num">$67,600</td><td><span class="tp-dots"><span class="hit" title="$64,900 (hit)"></span><span class="hit" title="$64,050 (hit)"></span><span class="hit" title="$62,400 (hit)"></span><span class="" title="$60,500"></span></span></td><td class="num">0.6000</td><td class="num">$39,723</td><td class="num"><span class="pos">+$1,163.64</span></td><td class="num"><span class="pos">+11.64%</span></td><td><span class="pill open"><span data-en="PARTIAL/OPEN" data-zh="部分平仓/持仓">PARTIAL/OPEN</span></span></td></tr>
+<tr><td>34</td><td>2026-06-17 19:20 UTC</td><td><span title="$63.6-$64.6K VAH/POC 回踩 long (❌ 6/18 已止损完结: 失败突破击穿 SL $62,700, -$1,113.00 — 熊周线+多头 31.8% archetype 再败)">plan_yy_valpoc_retest_long</span></td><td><span class="pill long"><span data-en="LONG" data-zh="多头">LONG</span></span></td><td class="num">$64,555</td><td class="num">$62,700</td><td><span class="tp-dots"><span class="hit" title="$66,000 (hit)"></span><span class="" title="$67,800"></span><span class="" title="$70,000"></span></span></td><td class="num">0.6000</td><td class="num">$38,733</td><td class="num"><span class="neg">$-1,113.00</span></td><td class="num"><span class="neg">-11.13%</span></td><td><span class="pill sl"><span data-en="SL HIT" data-zh="止损触发">SL HIT</span></span></td></tr>
+<tr><td>35</td><td>2026-06-18 05:07 UTC</td><td><span title="$63.3-$63.7K 深水扫荡-收复 long (❌ 6/18 已止损完结: 扫荡-收复证伪, 入场 $63,700 → SL $62,700, -$600.00)">plan_zz_deep_liqsweep_long</span></td><td><span class="pill long"><span data-en="LONG" data-zh="多头">LONG</span></span></td><td class="num">$63,700</td><td class="num">$62,700</td><td><span class="tp-dots"><span class="hit" title="$64,900 (hit)"></span><span class="" title="$66,000"></span><span class="" title="$67,800"></span></span></td><td class="num">0.6000</td><td class="num">$38,220</td><td class="num"><span class="neg">$-600.00</span></td><td class="num"><span class="neg">-6.00%</span></td><td><span class="pill sl"><span data-en="SL HIT" data-zh="止损触发">SL HIT</span></span></td></tr>
+<tr><td>36</td><td>2026-06-22 02:00 UTC</td><td><span title="$64.5-$65.0K VAH 反抽翻阻 fade short (6/22 CARRY 第4日·远端 fade·概率 ~20% — $65,000 成交量价值区高点 VAH + 日线 EMA20 $65,298 下沿; 6/21 高 $64,568 已实测此带为硬阻 (但无量插针未满足 6,000 BTC 门槛而未成交); 若反弹更强放量站回 VAH 则在此接力 fade)">plan_ac_vah_relief_fade_short</span></td><td><span class="pill short"><span data-en="SHORT" data-zh="空头">SHORT</span></span></td><td class="num">$64,641</td><td class="num">$64,641</td><td><span class="tp-dots"><span class="hit" title="$64,000 (hit)"></span><span class="" title="$62,800"></span><span class="" title="$61,500"></span><span class="" title="$60,500"></span></span></td><td class="num">1.0000</td><td class="num">$64,641</td><td class="num"><span class="">$0.00</span></td><td class="num"><span class="">0.00%</span></td><td><span class="pill open"><span data-en="PARTIAL/OPEN" data-zh="部分平仓/持仓">PARTIAL/OPEN</span></span></td></tr>
+<tr><td>37</td><td>2026-06-22 04:00 UTC</td><td><span title="$63.8-$64.3K 旧支撑簇翻阻 fade short (6/22 新建·本日首要·概率 ~38% — 6/18 扫破→6/19-20 收复→6/21 再失守 = 支撑转阻头顶争夺线; 1H 均线群翻阻; 6/21 缩量插针 $64,568 仅 4,423 BTC 验证上方乏力; resistance_fade_short 校准 2/2 + 熊周线做空 72.7% + OI 价跌升=新空; 只在带量反抽进场, 绝不裸接刀)">plan_ad_broken_shelf_retest_fade_short</span></td><td><span class="pill short"><span data-en="SHORT" data-zh="空头">SHORT</span></span></td><td class="num">$63,935</td><td class="num">$64,700</td><td><span class="tp-dots"><span class="hit" title="$63,300 (hit)"></span><span class="" title="$62,400"></span><span class="" title="$61,500"></span><span class="" title="$60,500"></span></span></td><td class="num">1.0000</td><td class="num">$63,935</td><td class="num"><span class="">$0.00</span></td><td class="num"><span class="">0.00%</span></td><td><span class="pill open"><span data-en="PARTIAL/OPEN" data-zh="部分平仓/持仓">PARTIAL/OPEN</span></span></td></tr>
+  </tbody>
+</table>
+</div>
+
+<footer>
+  <h3><span data-en="Methodology &amp;amp; Verification" data-zh="方法说明与可验证性">Methodology &amp; Verification</span></h3>
+  <p><span data-en="All trades execute against real-time &lt;strong&gt;Binance BTCUSDT perpetual&lt;/strong&gt; prices. Each entry timestamp + entry price below can be cross-referenced against Binance&#x27;s historical 1-minute candles for that minute (or against TradingView chart &lt;code&gt;BINANCE:BTCUSDT.P&lt;/code&gt;). Stop-losses and take-profit levels also fire on Binance perp prices." data-zh="所有交易均基于 &lt;strong&gt;Binance BTCUSDT 永续合约&lt;/strong&gt;的实时价格执行。下表中每笔交易的入场时间与入场价均可在 Binance 当时分钟级 K 线(或 TradingView &lt;code&gt;BINANCE:BTCUSDT.P&lt;/code&gt; 图表)上交叉验证。止损与止盈同样以 Binance 永续合约价格触发。">All trades execute against real-time <strong>Binance BTCUSDT perpetual</strong> prices. Each entry timestamp + entry price below can be cross-referenced against Binance's historical 1-minute candles for that minute (or against TradingView chart <code>BINANCE:BTCUSDT.P</code>). Stop-losses and take-profit levels also fire on Binance perp prices.</span></p>
+  <p><span data-en="Starting capital: &lt;strong&gt;$10,000&lt;/strong&gt;. Position sizes are determined by each plan&#x27;s tier weight × the bot&#x27;s max-position cap. Realized PnL is computed as (exit_price − entry_price) × quantity per partial close, summed over all TP hits and the final SL/TP/manual close." data-zh="初始资金:&lt;strong&gt;$10,000&lt;/strong&gt;。仓位大小由每个计划的层级权重 × 机器人的最大仓位上限决定。已实现盈亏按 (出场价 − 入场价) × 数量 计算每一次部分平仓的盈亏,并对所有止盈触发以及最终止损 / 止盈 / 手动平仓求和。">Starting capital: <strong>$10,000</strong>. Position sizes are determined by each plan's tier weight × the bot's max-position cap. Realized PnL is computed as (exit_price − entry_price) × quantity per partial close, summed over all TP hits and the final SL/TP/manual close.</span></p>
+  <p><span data-en="The equity curve is plotted at each trade&#x27;s &lt;em&gt;entry&lt;/em&gt; time (the trade&#x27;s full eventual realized PnL is added at that point). This is standard for strategy track-records and emphasizes the trade-by-trade outcomes; it is not a tick-by-tick mark-to-market curve." data-zh="净值曲线以每笔交易的&lt;em&gt;入场&lt;/em&gt;时间为节点绘制(该交易最终的已实现盈亏在该时点累加)。这是策略业绩记录的标准做法,强调逐笔交易的最终结果,并非逐 tick 的盯市曲线。">The equity curve is plotted at each trade's <em>entry</em> time (the trade's full eventual realized PnL is added at that point). This is standard for strategy track-records and emphasizes the trade-by-trade outcomes; it is not a tick-by-tick mark-to-market curve.</span></p>
+  <p><span data-en="APR is annualized linearly from the data window. Short windows extrapolate aggressively — treat APR as a directional signal, not a forward forecast. The same plans also run concurrently on Hyperliquid via a separate execution bot." data-zh="年化收益率为基于数据窗口的线性年化。短窗口外推较为激进 —— 请将年化数值视为方向性参考,而非未来预测。同一套计划也通过独立执行机器人在 Hyperliquid 同步运行。">APR is annualized linearly from the data window. Short windows extrapolate aggressively — treat APR as a directional signal, not a forward forecast. The same plans also run concurrently on Hyperliquid via a separate execution bot.</span></p>
+  <p><span data-en="Generated: 2026-06-22 04:06 UTC from the bot&#x27;s trade ledger. Source: BTC perp trading bot, EC2 (Tokyo), polling every 5s." data-zh="生成时间:2026-06-22 04:06 UTC,数据来源为交易机器人的交易记录。运行环境:BTC 永续合约交易机器人,EC2(东京),每 5 秒轮询一次。">Generated: 2026-06-22 04:06 UTC from the bot's trade ledger. Source: BTC perp trading bot, EC2 (Tokyo), polling every 5s.</span></p>
+</footer>
+
+</div>
+
+<script>
+const COMMON_LAYOUT = {
+  margin: {l: 60, r: 30, t: 20, b: 50},
+  font: {family: '-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Roboto, sans-serif', size: 12, color: '#0f172a'},
+  paper_bgcolor: 'rgba(0,0,0,0)',
+  plot_bgcolor: 'rgba(0,0,0,0)',
+  xaxis: {gridcolor: '#e2e8f0', linecolor: '#cbd5e1'},
+  yaxis: {gridcolor: '#e2e8f0', linecolor: '#cbd5e1'},
+  hovermode: 'x unified',
+  showlegend: false,
+};
+const COMMON_CONFIG = {responsive: true, displayModeBar: false};
+
+// ── Equity curve ──
+Plotly.newPlot('equity_chart', [
+  {
+    x: ["2026-04-01T00:00:00", "2026-04-10T00:00:00", "2026-04-10T00:00:00", "2026-04-12T00:00:00", "2026-04-15T00:00:00", "2026-04-16T00:00:00", "2026-04-16T13:19:00", "2026-04-20T03:20:04", "2026-04-21T13:00:48", "2026-04-22T12:03:36", "2026-04-27T05:14:18", "2026-04-29T04:00:27", "2026-04-29T17:00:10", "2026-05-01T02:00:21", "2026-05-06T12:00:10", "2026-05-08T02:55:21", "2026-05-11T18:00:11", "2026-05-13T00:00:08", "2026-05-14T16:59:57", "2026-05-17T08:03:10", "2026-05-17T10:00:13", "2026-05-18T09:02:21", "2026-05-19T14:34:46", "2026-05-22T14:04:47", "2026-05-23T06:37:45", "2026-05-23T07:51:07", "2026-05-25T10:00:04", "2026-05-27T04:18:54", "2026-05-28T14:19:44", "2026-06-01T12:11:57", "2026-06-04T00:25:10", "2026-06-05T14:06:45", "2026-06-05T19:00:14", "2026-06-08T00:26:22", "2026-06-15T12:00:12", "2026-06-17T19:20:51", "2026-06-18T05:07:17", "2026-06-22T02:00:16", "2026-06-22T04:00:05"],
+    y: [10000.0, 10000.0, 13800.0, 16500.0, 15580.0, 16645.6, 16665.0, 18408.5, 17612.4, 16514.0, 15264.6, 14818.5, 16328.6, 17732.7, 20656.4, 21797.5, 23806.3, 24242.3, 26353.9, 25901.8, 24770.36, 24328.06, 25322.66, 24692.66, 23607.66, 25191.37, 24138.28, 23340.68, 24195.32, 23075.48, 22063.1, 24672.56, 22841.26, 21161.49, 22325.14, 21212.14, 20612.14, 20612.14, 20612.14],
+    type: 'scatter',
+    mode: 'lines+markers',
+    line: {color: '#2563eb', width: 2},
+    marker: {size: 6, color: '#2563eb'},
+    fill: 'tozeroy',
+    fillcolor: 'rgba(37, 99, 235, 0.08)',
+    hovertemplate: '<b>%{x|%Y-%m-%d %H:%M}</b><br>Balance: $%{y:,.0f}<extra></extra>',
+  },
+  {
+    x: [["2026-04-01T00:00:00", "2026-04-10T00:00:00", "2026-04-10T00:00:00", "2026-04-12T00:00:00", "2026-04-15T00:00:00", "2026-04-16T00:00:00", "2026-04-16T13:19:00", "2026-04-20T03:20:04", "2026-04-21T13:00:48", "2026-04-22T12:03:36", "2026-04-27T05:14:18", "2026-04-29T04:00:27", "2026-04-29T17:00:10", "2026-05-01T02:00:21", "2026-05-06T12:00:10", "2026-05-08T02:55:21", "2026-05-11T18:00:11", "2026-05-13T00:00:08", "2026-05-14T16:59:57", "2026-05-17T08:03:10", "2026-05-17T10:00:13", "2026-05-18T09:02:21", "2026-05-19T14:34:46", "2026-05-22T14:04:47", "2026-05-23T06:37:45", "2026-05-23T07:51:07", "2026-05-25T10:00:04", "2026-05-27T04:18:54", "2026-05-28T14:19:44", "2026-06-01T12:11:57", "2026-06-04T00:25:10", "2026-06-05T14:06:45", "2026-06-05T19:00:14", "2026-06-08T00:26:22", "2026-06-15T12:00:12", "2026-06-17T19:20:51", "2026-06-18T05:07:17", "2026-06-22T02:00:16", "2026-06-22T04:00:05"][0], ["2026-04-01T00:00:00", "2026-04-10T00:00:00", "2026-04-10T00:00:00", "2026-04-12T00:00:00", "2026-04-15T00:00:00", "2026-04-16T00:00:00", "2026-04-16T13:19:00", "2026-04-20T03:20:04", "2026-04-21T13:00:48", "2026-04-22T12:03:36", "2026-04-27T05:14:18", "2026-04-29T04:00:27", "2026-04-29T17:00:10", "2026-05-01T02:00:21", "2026-05-06T12:00:10", "2026-05-08T02:55:21", "2026-05-11T18:00:11", "2026-05-13T00:00:08", "2026-05-14T16:59:57", "2026-05-17T08:03:10", "2026-05-17T10:00:13", "2026-05-18T09:02:21", "2026-05-19T14:34:46", "2026-05-22T14:04:47", "2026-05-23T06:37:45", "2026-05-23T07:51:07", "2026-05-25T10:00:04", "2026-05-27T04:18:54", "2026-05-28T14:19:44", "2026-06-01T12:11:57", "2026-06-04T00:25:10", "2026-06-05T14:06:45", "2026-06-05T19:00:14", "2026-06-08T00:26:22", "2026-06-15T12:00:12", "2026-06-17T19:20:51", "2026-06-18T05:07:17", "2026-06-22T02:00:16", "2026-06-22T04:00:05"][["2026-04-01T00:00:00", "2026-04-10T00:00:00", "2026-04-10T00:00:00", "2026-04-12T00:00:00", "2026-04-15T00:00:00", "2026-04-16T00:00:00", "2026-04-16T13:19:00", "2026-04-20T03:20:04", "2026-04-21T13:00:48", "2026-04-22T12:03:36", "2026-04-27T05:14:18", "2026-04-29T04:00:27", "2026-04-29T17:00:10", "2026-05-01T02:00:21", "2026-05-06T12:00:10", "2026-05-08T02:55:21", "2026-05-11T18:00:11", "2026-05-13T00:00:08", "2026-05-14T16:59:57", "2026-05-17T08:03:10", "2026-05-17T10:00:13", "2026-05-18T09:02:21", "2026-05-19T14:34:46", "2026-05-22T14:04:47", "2026-05-23T06:37:45", "2026-05-23T07:51:07", "2026-05-25T10:00:04", "2026-05-27T04:18:54", "2026-05-28T14:19:44", "2026-06-01T12:11:57", "2026-06-04T00:25:10", "2026-06-05T14:06:45", "2026-06-05T19:00:14", "2026-06-08T00:26:22", "2026-06-15T12:00:12", "2026-06-17T19:20:51", "2026-06-18T05:07:17", "2026-06-22T02:00:16", "2026-06-22T04:00:05"].length-1]],
+    y: [10000.0, 10000.0],
+    type: 'scatter',
+    mode: 'lines',
+    line: {color: '#94a3b8', width: 1, dash: 'dash'},
+    hoverinfo: 'skip',
+  },
+], {
+  ...COMMON_LAYOUT,
+  yaxis: {...COMMON_LAYOUT.yaxis, title: 'Balance ($)', tickformat: '$,.0f'},
+  xaxis: {...COMMON_LAYOUT.xaxis, title: ''},
+}, COMMON_CONFIG);
+
+// ── Drawdown ──
+Plotly.newPlot('dd_chart', [
+  {
+    x: ["2026-04-01T00:00:00", "2026-04-10T00:00:00", "2026-04-10T00:00:00", "2026-04-12T00:00:00", "2026-04-15T00:00:00", "2026-04-16T00:00:00", "2026-04-16T13:19:00", "2026-04-20T03:20:04", "2026-04-21T13:00:48", "2026-04-22T12:03:36", "2026-04-27T05:14:18", "2026-04-29T04:00:27", "2026-04-29T17:00:10", "2026-05-01T02:00:21", "2026-05-06T12:00:10", "2026-05-08T02:55:21", "2026-05-11T18:00:11", "2026-05-13T00:00:08", "2026-05-14T16:59:57", "2026-05-17T08:03:10", "2026-05-17T10:00:13", "2026-05-18T09:02:21", "2026-05-19T14:34:46", "2026-05-22T14:04:47", "2026-05-23T06:37:45", "2026-05-23T07:51:07", "2026-05-25T10:00:04", "2026-05-27T04:18:54", "2026-05-28T14:19:44", "2026-06-01T12:11:57", "2026-06-04T00:25:10", "2026-06-05T14:06:45", "2026-06-05T19:00:14", "2026-06-08T00:26:22", "2026-06-15T12:00:12", "2026-06-17T19:20:51", "2026-06-18T05:07:17", "2026-06-22T02:00:16", "2026-06-22T04:00:05"],
+    y: [-0.0, -0.0, -0.0, -0.0, -5.5758, -0.0, -0.0, -0.0, -4.3246, -10.2914, -17.0785, -19.5019, -11.2986, -3.6711, -0.0, -0.0, -0.0, -0.0, -0.0, -1.7155, -6.0088, -7.6871, -3.913, -6.3036, -10.4206, -4.4112, -8.4072, -11.4337, -8.1908, -12.44, -16.2815, -6.3799, -13.3287, -19.7026, -15.2872, -19.5105, -21.7872, -21.7872, -21.7872],
+    type: 'scatter',
+    mode: 'lines',
+    line: {color: '#dc2626', width: 1.5},
+    fill: 'tozeroy',
+    fillcolor: 'rgba(220, 38, 38, 0.12)',
+    hovertemplate: '<b>%{x|%Y-%m-%d %H:%M}</b><br>Drawdown: %{y:.2f}%<extra></extra>',
+  },
+], {
+  ...COMMON_LAYOUT,
+  yaxis: {...COMMON_LAYOUT.yaxis, title: 'Drawdown (%)', tickformat: '.1f', rangemode: 'tozero'},
+  xaxis: {...COMMON_LAYOUT.xaxis, title: ''},
+}, COMMON_CONFIG);
+
+// ── Per-trade bars ──
+Plotly.newPlot('bars_chart', [
+  {
+    x: ["#1", "#2", "#3", "#4", "#5", "#6", "#7", "#8", "#9", "#10", "#11", "#12", "#13", "#14", "#15", "#16", "#17", "#18", "#19", "#20", "#21", "#22", "#23", "#24", "#25", "#26", "#27", "#28", "#29", "#30", "#31", "#32", "#33", "#34", "#35", "#36", "#37"],
+    y: [3800.0, 2700.0, -920.0, 1065.6, 19.4, 1743.5, -796.1, -1098.4, -1249.4, -446.1, 1510.1, 1404.1, 2923.7, 1141.1, 2008.8, 436.0, 2111.6, -452.1, -1131.44, -442.3, 994.6, -630.0, -1085.0, 1583.71, -1053.09, -797.6, 854.64, -1119.84, -1012.38, 2609.46, -1831.3, -1679.77, 1163.64, -1113.0, -600.0, 0.0, 0.0],
+    type: 'bar',
+    marker: {color: ["#16a34a", "#16a34a", "#dc2626", "#16a34a", "#16a34a", "#16a34a", "#dc2626", "#dc2626", "#dc2626", "#dc2626", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#dc2626", "#dc2626", "#dc2626", "#16a34a", "#dc2626", "#dc2626", "#16a34a", "#dc2626", "#dc2626", "#16a34a", "#dc2626", "#dc2626", "#16a34a", "#dc2626", "#dc2626", "#16a34a", "#dc2626", "#dc2626", "#94a3b8", "#94a3b8"]},
+    customdata: ["<b>#1</b> &nbsp; plan_hist_0410_long<br>LONG entered 2026-04-10 00:00 UTC<br>Entry $$70,400 &nbsp; SL $$0 &nbsp; Qty 1.0000 BTC<br><b>Realized: $+3,800.00</b> (closed / tp)", "<b>#2</b> &nbsp; plan_hist_0412_short<br>SHORT entered 2026-04-12 00:00 UTC<br>Entry $$78,500 &nbsp; SL $$0 &nbsp; Qty 1.0000 BTC<br><b>Realized: $+2,700.00</b> (closed / tp)", "<b>#3</b> &nbsp; plan_hist_0415_long<br>LONG entered 2026-04-15 00:00 UTC<br>Entry $$73,800 &nbsp; SL $$72,880 &nbsp; Qty 1.0000 BTC<br><b>Realized: $-920.00</b> (closed / sl)", "<b>#4</b> &nbsp; plan_hist_0416_short<br>SHORT entered 2026-04-16 00:00 UTC<br>Entry $$78,200 &nbsp; SL $$0 &nbsp; Qty 1.0000 BTC<br><b>Realized: $+1,065.60</b> (closed / tp)", "<b>#5</b> &nbsp; plan_c_vah_rejection_short<br>SHORT entered 2026-04-16 13:19 UTC<br>Entry $$74,844 &nbsp; SL $$75,800 &nbsp; Qty 0.1000 BTC<br><b>Realized: $+19.40</b> (closed / sl)", "<b>#6</b> &nbsp; plan_b_ema100_reaction_long<br>LONG entered 2026-04-20 03:20 UTC<br>Entry $$74,384 &nbsp; SL $$73,500 &nbsp; Qty 1.0000 BTC<br><b>Realized: $+1,743.50</b> (closed / tp)", "<b>#7</b> &nbsp; plan_e_breakout_long<br>LONG entered 2026-04-21 13:00 UTC<br>Entry $$75,996 &nbsp; SL $$75,200 &nbsp; Qty 1.0000 BTC<br><b>Realized: $-796.10</b> (closed / sl)", "<b>#8</b> &nbsp; plan_a_htf_rejection_short<br>SHORT entered 2026-04-22 12:03 UTC<br>Entry $$78,302 &nbsp; SL $$79,400 &nbsp; Qty 1.0000 BTC<br><b>Realized: $-1,098.40</b> (closed / sl)", "<b>#9</b> &nbsp; plan_a3_pullback_long<br>LONG entered 2026-04-27 05:14 UTC<br>Entry $$78,449 &nbsp; SL $$77,200 &nbsp; Qty 1.0000 BTC<br><b>Realized: $-1,249.40</b> (closed / sl)", "<b>#10</b> &nbsp; plan_a5_reclaim_long<br>LONG entered 2026-04-29 04:00 UTC<br>Entry $$76,983 &nbsp; SL $$76,200 &nbsp; Qty 2.0000 BTC<br><b>Realized: $-446.10</b> (closed / sl)", "<b>#11</b> &nbsp; plan_g_v2_fib_long<br>LONG entered 2026-04-29 17:00 UTC<br>Entry $$75,780 &nbsp; SL $$74,300 &nbsp; Qty 1.0000 BTC<br><b>Realized: $+1,510.10</b> (closed / tp)", "<b>#12</b> &nbsp; plan_a6_reclaim_long<br>LONG entered 2026-05-01 02:00 UTC<br>Entry $$76,646 &nbsp; SL $$75,800 &nbsp; Qty 1.0000 BTC<br><b>Realized: $+1,404.10</b> (closed / tp)", "<b>#13</b> &nbsp; plan_l_log_fib_top_short<br>SHORT entered 2026-05-06 12:00 UTC<br>Entry $$82,489 &nbsp; SL $$83,800 &nbsp; Qty 1.0000 BTC<br><b>Realized: $+2,923.70</b> (closed / tp)", "<b>#14</b> &nbsp; plan_p_oversold_bounce_long<br>LONG entered 2026-05-08 02:55 UTC<br>Entry $$79,484 &nbsp; SL $$78,700 &nbsp; Qty 1.0000 BTC<br><b>Realized: $+1,141.10</b> (closed / tp)", "<b>#15</b> &nbsp; plan_r_resistance_short<br>SHORT entered 2026-05-11 18:00 UTC<br>Entry $$81,869 &nbsp; SL $$82,800 &nbsp; Qty 1.0000 BTC<br><b>Realized: $+2,008.80</b> (closed / tp)", "<b>#16</b> &nbsp; plan_t_breakdown_short<br>SHORT entered 2026-05-13 00:00 UTC<br>Entry $$80,461 &nbsp; SL $$81,500 &nbsp; Qty 1.0000 BTC<br><b>Realized: $+436.00</b> (closed / sl)", "<b>#17</b> &nbsp; plan_v_resistance_fade_short<br>SHORT entered 2026-05-14 16:59 UTC<br>Entry $$81,812 &nbsp; SL $$82,800 &nbsp; Qty 1.0000 BTC<br><b>Realized: $+2,111.60</b> (closed / tp)", "<b>#18</b> &nbsp; plan_z_gold_pocket_scout_long<br>LONG entered 2026-05-17 08:03 UTC<br>Entry $$78,127 &nbsp; SL $$77,400 &nbsp; Qty 1.0000 BTC<br><b>Realized: $-452.10</b> (closed / sl)", "<b>#19</b> &nbsp; plan_o_deeper_pullback_long<br>LONG entered 2026-05-17 10:00 UTC<br>Entry $$78,214 &nbsp; SL $$76,800 &nbsp; Qty 0.8000 BTC<br><b>Realized: $-1,131.44</b> (closed / sl)", "<b>#20</b> &nbsp; plan_bb_oversold_scout_long<br>LONG entered 2026-05-18 09:02 UTC<br>Entry $$76,967 &nbsp; SL $$76,200 &nbsp; Qty 1.0000 BTC<br><b>Realized: $-442.30</b> (closed / sl)", "<b>#21</b> &nbsp; plan_dd_oversold_scout_v2_long<br>LONG entered 2026-05-19 14:34 UTC<br>Entry $$76,280 &nbsp; SL $$76,280 &nbsp; Qty 1.0000 BTC<br><b>Realized: $+994.60</b> (closed / retired 2026-05-22: manager exit when fund pooled; replaced by plan_ff in daily set; mirrors live flatten (not SL/TP))", "<b>#22</b> &nbsp; plan_gg_pullback_retrace_long<br>LONG entered 2026-05-22 14:04 UTC<br>Entry $$77,100 &nbsp; SL $$76,400 &nbsp; Qty 0.9000 BTC<br><b>Realized: $-630.00</b> (closed / sl)", "<b>#23</b> &nbsp; plan_ff_oversold_scout_v4_long<br>LONG entered 2026-05-23 06:37 UTC<br>Entry $$75,385 &nbsp; SL $$74,300 &nbsp; Qty 1.0000 BTC<br><b>Realized: $-1,085.00</b> (closed / sl)", "<b>#24</b> &nbsp; plan_ii_wave5_extension_scout_long<br>LONG entered 2026-05-23 07:51 UTC<br>Entry $$74,285 &nbsp; SL $$74,285 &nbsp; Qty 0.9000 BTC<br><b>Realized: $+1,583.71</b> (closed / sl)", "<b>#25</b> &nbsp; plan_jj_breakout_continuation_long_scout<br>LONG entered 2026-05-25 10:00 UTC<br>Entry $$77,570 &nbsp; SL $$76,400 &nbsp; Qty 0.9000 BTC<br><b>Realized: $-1,053.09</b> (closed / sl)", "<b>#26</b> &nbsp; plan_kk_abc_b_wave_pullback_long<br>LONG entered 2026-05-27 04:18 UTC<br>Entry $$75,498 &nbsp; SL $$74,700 &nbsp; Qty 1.0000 BTC<br><b>Realized: $-797.60</b> (closed / sl)", "<b>#27</b> &nbsp; plan_nn_breakdown_acceleration_short_v7<br>SHORT entered 2026-05-28 14:19 UTC<br>Entry $$73,509 &nbsp; SL $$74,500 &nbsp; Qty 0.6000 BTC<br><b>Realized: $+854.64</b> (closed / tp)", "<b>#28</b> &nbsp; plan_c_fib_pullback_long_v3<br>LONG entered 2026-06-01 12:11 UTC<br>Entry $$71,866 &nbsp; SL $$70,000 &nbsp; Qty 0.6000 BTC<br><b>Realized: $-1,119.84</b> (closed / sl)", "<b>#29</b> &nbsp; plan_uu_lower_capitulation_long<br>LONG entered 2026-06-04 00:25 UTC<br>Entry $$63,987 &nbsp; SL $$62,300 &nbsp; Qty 0.6000 BTC<br><b>Realized: $-1,012.38</b> (closed / sl)", "<b>#30</b> &nbsp; deep_water_tier0<br>LONG entered 2026-06-05 14:06 UTC<br>Entry $$60,451 &nbsp; SL $$58,200 &nbsp; Qty 1.0000 BTC<br><b>Realized: $+2,609.46</b> (partial_tp)", "<b>#31</b> &nbsp; plan_ww_60k_breakdown_short<br>SHORT entered 2026-06-05 19:00 UTC<br>Entry $$59,369 &nbsp; SL $$61,200 &nbsp; Qty 1.0000 BTC<br><b>Realized: $-1,831.30</b> (closed / sl)", "<b>#32</b> &nbsp; plan_xx_relief_rally_fade_short<br>SHORT entered 2026-06-08 00:26 UTC<br>Entry $$63,417 &nbsp; SL $$65,600 &nbsp; Qty 1.5000 BTC<br><b>Realized: $-1,679.77</b> (closed / sl)", "<b>#33</b> &nbsp; plan_vv_broken_shelf_fade_short<br>SHORT entered 2026-06-15 12:00 UTC<br>Entry $$66,204 &nbsp; SL $$67,600 &nbsp; Qty 0.6000 BTC<br><b>Realized: $+1,163.64</b> (partial_tp)", "<b>#34</b> &nbsp; plan_yy_valpoc_retest_long<br>LONG entered 2026-06-17 19:20 UTC<br>Entry $$64,555 &nbsp; SL $$62,700 &nbsp; Qty 0.6000 BTC<br><b>Realized: $-1,113.00</b> (closed / sl)", "<b>#35</b> &nbsp; plan_zz_deep_liqsweep_long<br>LONG entered 2026-06-18 05:07 UTC<br>Entry $$63,700 &nbsp; SL $$62,700 &nbsp; Qty 0.6000 BTC<br><b>Realized: $-600.00</b> (closed / sl)", "<b>#36</b> &nbsp; plan_ac_vah_relief_fade_short<br>SHORT entered 2026-06-22 02:00 UTC<br>Entry $$64,641 &nbsp; SL $$64,641 &nbsp; Qty 1.0000 BTC<br><b>Realized: $+0.00</b> (open)", "<b>#37</b> &nbsp; plan_ad_broken_shelf_retest_fade_short<br>SHORT entered 2026-06-22 04:00 UTC<br>Entry $$63,935 &nbsp; SL $$64,700 &nbsp; Qty 1.0000 BTC<br><b>Realized: $+0.00</b> (open)"],
+    hovertemplate: '%{customdata}<extra></extra>',
+  },
+], {
+  ...COMMON_LAYOUT,
+  yaxis: {...COMMON_LAYOUT.yaxis, title: 'Realized PnL ($)', tickformat: '$,.0f', zeroline: true, zerolinecolor: '#94a3b8'},
+  xaxis: {...COMMON_LAYOUT.xaxis, title: ''},
+  hovermode: 'closest',
+}, COMMON_CONFIG);
+
+// ── Language toggle ──
+function applyLang(lang) {
+  document.documentElement.dataset.lang = lang;
+  document.documentElement.setAttribute('lang', lang === 'zh' ? 'zh-CN' : 'en');
+  document.querySelectorAll('[data-en]').forEach(function(el) {
+    var text = el.dataset[lang];
+    if (text !== undefined) el.innerHTML = text;
+  });
+  var btn = document.getElementById('langToggle');
+  if (btn) btn.textContent = (lang === 'en') ? '中文' : 'English';
+}
+function toggleLang() {
+  var cur = document.documentElement.dataset.lang || 'en';
+  var next = (cur === 'en') ? 'zh' : 'en';
+  applyLang(next);
+  try { localStorage.setItem('dashLang', next); } catch (e) {}
+}
+(function() {
+  var lang = 'en';
+  try { lang = localStorage.getItem('dashLang') || 'en'; } catch (e) {}
+  applyLang(lang);
+})();
+</script>
+</body>
+</html>

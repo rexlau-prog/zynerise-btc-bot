@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta http-equiv="refresh" content="30">
+<title>Live Bot Status</title>
+<style>
+:root {
+  --bg:#f7f8fa; --card:#fff; --text:#0f172a; --muted:#64748b; --border:#e2e8f0;
+  --green:#16a34a; --red:#dc2626; --amber:#d97706; --blue:#2563eb;
+  --bg-green:#f0fdf4; --bg-red:#fef2f2; --bg-amber:#fffbeb;
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--text);
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",Roboto,sans-serif;
+       font-size:13px; line-height:1.45; }
+.container { max-width:1700px; margin:0 auto; padding:20px; }
+header { display:flex; justify-content:space-between; align-items:baseline;
+          margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid var(--border); }
+header h1 { margin:0; font-size:20px; }
+header .meta { color:var(--muted); font-size:12px; }
+.topbar { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:18px; }
+.topbar .stat { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:10px 14px; }
+.topbar .stat .lbl { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.05em; }
+.topbar .stat .val { font-size:18px; font-weight:700; margin-top:3px; }
+.grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:18px; }
+.grid-wide { display:grid; grid-template-columns:1fr; gap:14px; margin-bottom:18px; }
+.card { background:var(--card); border:1px solid var(--border); border-radius:10px;
+         padding:14px; overflow:hidden; }
+.card-header { display:flex; justify-content:space-between; align-items:baseline;
+                margin-bottom:8px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+.card-header h3 { margin:0; font-size:14px; font-weight:700; }
+.kpis { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:8px; }
+.kpi-label { color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacing:.05em; }
+.kpi-value { font-size:18px; font-weight:700; margin-top:2px; }
+.section-label { color:var(--muted); font-size:10px; text-transform:uppercase;
+                  letter-spacing:.05em; margin:10px 0 5px; }
+table { width:100%; border-collapse:collapse; font-size:11.5px; }
+th, td { padding:4px 6px; text-align:left; border-bottom:1px solid var(--border); }
+th { color:var(--muted); font-weight:600; font-size:10px; text-transform:uppercase; }
+.pill { display:inline-block; padding:1px 6px; border-radius:999px; font-size:9.5px;
+         font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
+.pill.long { background:var(--bg-green); color:var(--green); }
+.pill.short { background:var(--bg-red); color:var(--red); }
+.pos { color:var(--green); }
+.neg { color:var(--red); }
+.amber { color:var(--amber); }
+.muted { color:var(--muted); }
+.small { font-size:11.5px; }
+.xs { font-size:10.5px; }
+.mono { font-family:ui-monospace,Menlo,Monaco,monospace; font-variant-numeric:tabular-nums; }
+.plans-table th { font-size:11px; }
+.plans-table td { padding:5px 6px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div>
+    <h1>BTC Bot — Live Status</h1>
+    <div class="meta">Generated 2026-06-22 04:06:05 UTC · auto-refreshes every 30s</div>
+  </div>
+  <div class="meta mono">BTC mark: <strong>$63,916.50</strong></div>
+</header>
+
+<div class="topbar">
+  <div class="stat"><div class="lbl">HL equity</div><div class="val">$0.01</div></div>
+  <div class="stat"><div class="lbl">Binance total (3 subs)</div><div class="val">$5,918.36</div></div>
+  <div class="stat"><div class="lbl">Combined live capital</div><div class="val">$5,918.36</div></div>
+</div>
+
+<div class="grid">
+
+        <div class="card">
+          <div class="card-header">
+            <h3>btc_high</h3>
+            <span class="muted small">zynerise btc bot 1 · hedge=True · 5x</span>
+          </div>
+          <div class="kpis">
+            <div><div class="kpi-label">EQUITY</div><div class="kpi-value">$2,781.31</div></div>
+            <div><div class="kpi-label">AVAILABLE</div><div class="kpi-value">$2,321.57</div></div>
+          </div>
+          <div class="section-label">Active plans (slot → plan)</div>
+          <div class="small">LONG=`deep_water_tier0`, SHORT=`plan_vv_broken_shelf_fade_short`</div>
+          <div class="section-label">Positions</div>
+          <table><thead><tr><th>Dir</th><th>Size</th><th>Entry</th><th>uPnL</th><th>Side</th><th>Liq</th></tr></thead>
+          <tbody><tr><td><span class="pill short">SHORT</span></td><td class="mono">0.00800</td><td class="mono">$66,197.70</td><td class="mono pos">+$18.22</td><td class="mono small">SHORT</td><td class="mono small">$0</td></tr><tr><td><span class="pill long">LONG</span></td><td class="mono">0.02800</td><td class="mono">$60,500.00</td><td class="mono pos">+$95.75</td><td class="mono small">LONG</td><td class="mono small">$0</td></tr></tbody></table>
+          <div class="section-label">Open Orders (3) — regular (entry / TPs)</div>
+          <table><thead><tr><th>Side</th><th>Type</th><th>Qty</th><th>Price</th><th>posSide</th><th>oid</th></tr></thead>
+          <tbody><tr><td><span class="pill short">SELL</span></td><td class="small">LIMIT</td><td class="mono small">0.010</td><td class="mono small">$70000.00</td><td class="mono small">LONG</td><td class="mono xs">1031944023828</td></tr><tr><td><span class="pill short">SELL</span></td><td class="small">LIMIT</td><td class="mono small">0.017</td><td class="mono small">$68300.00</td><td class="mono small">LONG</td><td class="mono xs">1031944022085</td></tr><tr><td><span class="pill long">BUY</span></td><td class="small">LIMIT</td><td class="mono small">0.006</td><td class="mono small">$60500.00</td><td class="mono small">SHORT</td><td class="mono xs">1042489136765</td></tr></tbody></table>
+          <div class="section-label">Conditional Orders (SL — tracked locally; PM has no GET endpoint)</div>
+          <table><thead><tr><th>Plan</th><th>Side</th><th>Type</th><th>Trigger</th><th>posSide</th><th>State</th><th>algoId</th></tr></thead>
+          <tbody><tr><td class="xs">deep_water_tier0</td><td><span class="pill short">SELL</span></td><td class="small">STOP_MARKET</td><td class="mono small">trig $58,200</td><td class="mono small">LONG</td><td class="small pos">active</td><td class="mono xs">4000001491299353</td></tr><tr><td class="xs">plan_vv_broken_shelf_fade_short</td><td><span class="pill long">BUY</span></td><td class="small">STOP_MARKET</td><td class="mono small">trig $67,600</td><td class="mono small">SHORT</td><td class="small pos">active</td><td class="mono xs">4000001578831739</td></tr><tr><td class="xs muted">(orphan)</td><td>—</td><td class="small">algo</td><td class="mono small">—</td><td>—</td><td class="small amber">untracked</td><td class="mono xs">4000001380075102</td></tr><tr><td class="xs muted">(orphan)</td><td>—</td><td class="small">algo</td><td class="mono small">—</td><td>—</td><td class="small amber">untracked</td><td class="mono xs">4000001397541404</td></tr><tr><td class="xs muted">(orphan)</td><td>—</td><td class="small">algo</td><td class="mono small">—</td><td>—</td><td class="small amber">untracked</td><td class="mono xs">4000001411183638</td></tr><tr><td class="xs muted">(orphan)</td><td>—</td><td class="small">algo</td><td class="mono small">—</td><td>—</td><td class="small amber">untracked</td><td class="mono xs">4000001449913662</td></tr><tr><td class="xs muted">(orphan)</td><td>—</td><td class="small">algo</td><td class="mono small">—</td><td>—</td><td class="small amber">untracked</td><td class="mono xs">4000001472749159</td></tr><tr><td class="xs muted">(orphan)</td><td>—</td><td class="small">algo</td><td class="mono small">—</td><td>—</td><td class="small amber">untracked</td><td class="mono xs">4000001495062504</td></tr><tr><td class="xs muted">(orphan)</td><td>—</td><td class="small">algo</td><td class="mono small">—</td><td>—</td><td class="small amber">untracked</td><td class="mono xs">4000001516108991</td></tr></tbody></table>
+          <div class="section-label">Recent fills (6)</div>
+          <table><thead><tr><th>Time UTC</th><th>Side</th><th>Qty</th><th>Price</th><th>Realized</th></tr></thead>
+          <tbody><tr><td class="mono xs">06-18 15:57:25</td><td><span class="pill long">BUY</span></td><td class="mono xs">0.010</td><td class="mono xs">$62400</td><td class="mono xs pos">+$37.98</td></tr><tr><td class="mono xs">06-17 19:50:01</td><td><span class="pill long">BUY</span></td><td class="mono xs">0.012</td><td class="mono xs">$64050</td><td class="mono xs pos">+$25.77</td></tr><tr><td class="mono xs">06-17 08:39:50</td><td><span class="pill long">BUY</span></td><td class="mono xs">0.012</td><td class="mono xs">$64900</td><td class="mono xs pos">+$15.57</td></tr><tr><td class="mono xs">06-15 12:00:26</td><td><span class="pill short">SELL</span></td><td class="mono xs">0.019</td><td class="mono xs">$66197.70</td><td class="mono xs muted">—</td></tr><tr><td class="mono xs">06-15 12:00:26</td><td><span class="pill short">SELL</span></td><td class="mono xs">0.023</td><td class="mono xs">$66197.70</td><td class="mono xs muted">—</td></tr><tr><td class="mono xs">06-15 11:18:26</td><td><span class="pill short">SELL</span></td><td class="mono xs">0.021</td><td class="mono xs">$66000</td><td class="mono xs pos">+$115.50</td></tr></tbody></table>
+          <div class="section-label">Routing config</div>
+          <div class="small">Pinned: <span class="mono xs">plan_z_gold_pocket_scout_long, plan_x_top_blow_off_short</span></div>
+          <div class="small">Accepts: priorities: <span class='mono'>[&#x27;high&#x27;]</span> · directions: <span class='mono'>[&#x27;long&#x27;, &#x27;short&#x27;]</span></div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h3>btc_carry_a</h3>
+            <span class="muted small">zynerise btc bot 2 · hedge=True · 5x</span>
+          </div>
+          <div class="kpis">
+            <div><div class="kpi-label">EQUITY</div><div class="kpi-value">$1,594.76</div></div>
+            <div><div class="kpi-label">AVAILABLE</div><div class="kpi-value">$700.98</div></div>
+          </div>
+          <div class="section-label">Active plans (slot → plan)</div>
+          <div class="small">SHORT=`plan_ac_vah_relief_fade_short`</div>
+          <div class="section-label">Positions</div>
+          <table><thead><tr><th>Dir</th><th>Size</th><th>Entry</th><th>uPnL</th><th>Side</th><th>Liq</th></tr></thead>
+          <tbody><tr><td><span class="pill short">SHORT</span></td><td class="mono">0.07000</td><td class="mono">$64,603.30</td><td class="mono pos">+$47.86</td><td class="mono small">SHORT</td><td class="mono small">$86,369</td></tr></tbody></table>
+          <div class="section-label">Open Orders (3) — regular (entry / TPs)</div>
+          <table><thead><tr><th>Side</th><th>Type</th><th>Qty</th><th>Price</th><th>posSide</th><th>oid</th></tr></thead>
+          <tbody><tr><td><span class="pill long">BUY</span></td><td class="small">LIMIT</td><td class="mono small">0.024</td><td class="mono small">$61500.00</td><td class="mono small">SHORT</td><td class="mono xs">1048641709559</td></tr><tr><td><span class="pill long">BUY</span></td><td class="small">LIMIT</td><td class="mono small">0.021</td><td class="mono small">$60500.00</td><td class="mono small">SHORT</td><td class="mono xs">1048641709589</td></tr><tr><td><span class="pill long">BUY</span></td><td class="small">LIMIT</td><td class="mono small">0.024</td><td class="mono small">$62800.00</td><td class="mono small">SHORT</td><td class="mono xs">1048641709489</td></tr></tbody></table>
+          <div class="section-label">Conditional Orders (SL — tracked locally; PM has no GET endpoint)</div>
+          <table><thead><tr><th>Plan</th><th>Side</th><th>Type</th><th>Trigger</th><th>posSide</th><th>State</th><th>algoId</th></tr></thead>
+          <tbody><tr><td class="xs">plan_ac_vah_relief_fade_short</td><td><span class="pill long">BUY</span></td><td class="small">STOP_MARKET</td><td class="mono small">trig $64,603 (BE)</td><td class="mono small">SHORT</td><td class="small pos">active</td><td class="mono xs">3000001914378952</td></tr><tr><td class="xs muted">(orphan)</td><td>—</td><td class="small">algo</td><td class="mono small">—</td><td>—</td><td class="small amber">untracked</td><td class="mono xs">3000001611761983</td></tr><tr><td class="xs muted">(orphan)</td><td>—</td><td class="small">algo</td><td class="mono small">—</td><td>—</td><td class="small amber">untracked</td><td class="mono xs">3000001627044322</td></tr><tr><td class="xs muted">(orphan)</td><td>—</td><td class="small">algo</td><td class="mono small">—</td><td>—</td><td class="small amber">untracked</td><td class="mono xs">3000001631219460</td></tr><tr><td class="xs muted">(orphan)</td><td>—</td><td class="small">algo</td><td class="mono small">—</td><td>—</td><td class="small amber">untracked</td><td class="mono xs">3000001876144329</td></tr><tr><td class="xs muted">(orphan)</td><td>—</td><td class="small">algo</td><td class="mono small">—</td><td>—</td><td class="small amber">untracked</td><td class="mono xs">3000001877675999</td></tr></tbody></table>
+          <div class="section-label">Recent fills (8)</div>
+          <table><thead><tr><th>Time UTC</th><th>Side</th><th>Qty</th><th>Price</th><th>Realized</th></tr></thead>
+          <tbody><tr><td class="mono xs">06-22 02:00:28</td><td><span class="pill short">SELL</span></td><td class="mono xs">0.070</td><td class="mono xs">$64603.30</td><td class="mono xs muted">—</td></tr><tr><td class="mono xs">06-18 15:40:40</td><td><span class="pill short">SELL</span></td><td class="mono xs">0.042</td><td class="mono xs">$62699.70</td><td class="mono xs neg">$-82.63</td></tr><tr><td class="mono xs">06-17 19:21:02</td><td><span class="pill long">BUY</span></td><td class="mono xs">0.040</td><td class="mono xs">$64667</td><td class="mono xs muted">—</td></tr><tr><td class="mono xs">06-17 19:21:02</td><td><span class="pill long">BUY</span></td><td class="mono xs">0.001</td><td class="mono xs">$64667</td><td class="mono xs muted">—</td></tr><tr><td class="mono xs">06-17 19:21:02</td><td><span class="pill long">BUY</span></td><td class="mono xs">0.001</td><td class="mono xs">$64667</td><td class="mono xs muted">—</td></tr><tr><td class="mono xs">06-17 19:20:28</td><td><span class="pill short">SELL</span></td><td class="mono xs">0.020</td><td class="mono xs">$64602.60</td><td class="mono xs pos">+$0.05</td></tr><tr><td class="mono xs">06-17 19:20:28</td><td><span class="pill short">SELL</span></td><td class="mono xs">0.022</td><td class="mono xs">$64602.60</td><td class="mono xs pos">+$0.06</td></tr><tr><td class="mono xs">06-17 12:30:16</td><td><span class="pill long">BUY</span></td><td class="mono xs">0.042</td><td class="mono xs">$64600</td><td class="mono xs muted">—</td></tr></tbody></table>
+          <div class="section-label">Routing config</div>
+          <div class="small">Pinned: <span class="mono xs">plan_o_deeper_pullback_long, plan_d_wedge_target_long</span></div>
+          <div class="small">Accepts: priorities: <span class='mono'>[&#x27;watch&#x27;, &#x27;medium&#x27;, &#x27;high&#x27;]</span> · directions: <span class='mono'>[&#x27;long&#x27;, &#x27;short&#x27;]</span></div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h3>btc_carry_b</h3>
+            <span class="muted small">zynerise trading bot 3 · hedge=True · 5x</span>
+          </div>
+          <div class="kpis">
+            <div><div class="kpi-label">EQUITY</div><div class="kpi-value">$1,542.29</div></div>
+            <div><div class="kpi-label">AVAILABLE</div><div class="kpi-value">$648.52</div></div>
+          </div>
+          <div class="section-label">Active plans (slot → plan)</div>
+          <div class="small">SHORT=`plan_ad_broken_shelf_retest_fade_short`</div>
+          <div class="section-label">Positions</div>
+          <table><thead><tr><th>Dir</th><th>Size</th><th>Entry</th><th>uPnL</th><th>Side</th><th>Liq</th></tr></thead>
+          <tbody><tr><td><span class="pill short">SHORT</span></td><td class="mono">0.07000</td><td class="mono">$63,917.00</td><td class="mono neg">$-0.18</td><td class="mono small">SHORT</td><td class="mono small">$85,622</td></tr></tbody></table>
+          <div class="section-label">Open Orders (3) — regular (entry / TPs)</div>
+          <table><thead><tr><th>Side</th><th>Type</th><th>Qty</th><th>Price</th><th>posSide</th><th>oid</th></tr></thead>
+          <tbody><tr><td><span class="pill long">BUY</span></td><td class="small">LIMIT</td><td class="mono small">0.024</td><td class="mono small">$62400.00</td><td class="mono small">SHORT</td><td class="mono xs">1048735993376</td></tr><tr><td><span class="pill long">BUY</span></td><td class="small">LIMIT</td><td class="mono small">0.024</td><td class="mono small">$61500.00</td><td class="mono small">SHORT</td><td class="mono xs">1048735994851</td></tr><tr><td><span class="pill long">BUY</span></td><td class="small">LIMIT</td><td class="mono small">0.021</td><td class="mono small">$60500.00</td><td class="mono small">SHORT</td><td class="mono xs">1048735995683</td></tr></tbody></table>
+          <div class="section-label">Conditional Orders (SL — tracked locally; PM has no GET endpoint)</div>
+          <table><thead><tr><th>Plan</th><th>Side</th><th>Type</th><th>Trigger</th><th>posSide</th><th>State</th><th>algoId</th></tr></thead>
+          <tbody><tr><td class="xs">plan_ad_broken_shelf_retest_fade_short</td><td><span class="pill long">BUY</span></td><td class="small">STOP_MARKET</td><td class="mono small">trig $64,700</td><td class="mono small">SHORT</td><td class="small pos">active</td><td class="mono xs">1000002196868155</td></tr><tr><td class="xs muted">(orphan)</td><td>—</td><td class="small">algo</td><td class="mono small">—</td><td>—</td><td class="small amber">untracked</td><td class="mono xs">1000002000484447</td></tr></tbody></table>
+          <div class="section-label">Recent fills (3)</div>
+          <table><thead><tr><th>Time UTC</th><th>Side</th><th>Qty</th><th>Price</th><th>Realized</th></tr></thead>
+          <tbody><tr><td class="mono xs">06-22 04:00:09</td><td><span class="pill short">SELL</span></td><td class="mono xs">0.070</td><td class="mono xs">$63917</td><td class="mono xs muted">—</td></tr><tr><td class="mono xs">06-18 15:40:40</td><td><span class="pill short">SELL</span></td><td class="mono xs">0.042</td><td class="mono xs">$62699.70</td><td class="mono xs neg">$-42.01</td></tr><tr><td class="mono xs">06-18 05:04:45</td><td><span class="pill long">BUY</span></td><td class="mono xs">0.042</td><td class="mono xs">$63700</td><td class="mono xs muted">—</td></tr></tbody></table>
+          <div class="section-label">Routing config</div>
+          <div class="small">Pinned: <span class="mono xs">plan_c_fib_pullback_long, deep_water_tier1, plan_aa_breakdown_acceleration_short</span></div>
+          <div class="small">Accepts: priorities: <span class='mono'>[&#x27;watch&#x27;, &#x27;medium&#x27;, &#x27;high&#x27;]</span> · directions: <span class='mono'>[&#x27;long&#x27;, &#x27;short&#x27;]</span></div>
+        </div>
+        
+</div>
+
+<div class="grid-wide">
+  <div class="card">
+    <div class="card-header"><h3>Hyperliquid (master)</h3><span class="muted small">strict serialization</span></div>
+    <div class="kpis">
+      <div><div class="kpi-label">ACCOUNT VALUE</div><div class="kpi-value">$0.01</div></div>
+      <div><div class="kpi-label">WITHDRAWABLE</div><div class="kpi-value">$0.01</div></div>
+    </div>
+    <div class="section-label">Positions (0)</div>
+    <table><thead><tr><th>Dir</th><th>Coin</th><th>Size</th><th>Entry</th><th>uPnL</th><th>Lev</th><th>Liq</th></tr></thead>
+    <tbody><tr><td colspan="7" class="muted">no positions</td></tr></tbody></table>
+    <div class="section-label">Open Orders (0)</div>
+    <table><thead><tr><th>Side</th><th>Type</th><th>Coin</th><th>Size</th><th>Price</th><th></th><th>oid</th></tr></thead>
+    <tbody><tr><td colspan="7" class="muted">no orders</td></tr></tbody></table>
+    <div class="section-label">Recent fills (20)</div>
+    <table><thead><tr><th>Time UTC</th><th>Side</th><th>Coin</th><th>Size</th><th>Price</th><th>Closed PnL</th></tr></thead>
+    <tbody><tr><td class="mono xs">04-02 01:26:10</td><td><span class="pill long">BUY</span></td><td class="mono xs">PAXG</td><td class="mono xs">0.006</td><td class="mono xs">$4690.3</td><td class="mono xs muted">—</td></tr><tr><td class="mono xs">04-02 03:07:01</td><td><span class="pill short">SELL</span></td><td class="mono xs">PAXG</td><td class="mono xs">0.006</td><td class="mono xs">$4673.7</td><td class="mono xs neg">$-0.10</td></tr><tr><td class="mono xs">04-02 10:42:10</td><td><span class="pill long">BUY</span></td><td class="mono xs">PAXG</td><td class="mono xs">0.007</td><td class="mono xs">$4613.5</td><td class="mono xs muted">—</td></tr><tr><td class="mono xs">04-02 10:43:11</td><td><span class="pill short">SELL</span></td><td class="mono xs">PAXG</td><td class="mono xs">0.006</td><td class="mono xs">$4619.7</td><td class="mono xs pos">+$0.04</td></tr><tr><td class="mono xs">04-02 12:22:22</td><td><span class="pill short">SELL</span></td><td class="mono xs">PAXG</td><td class="mono xs">0.006</td><td class="mono xs">$4616.6</td><td class="mono xs pos">+$0.00</td></tr><tr><td class="mono xs">04-02 12:27:55</td><td><span class="pill long">BUY</span></td><td class="mono xs">PAXG</td><td class="mono xs">0.004</td><td class="mono xs">$4616.4</td><td class="mono xs pos">+$0.00</td></tr><tr><td class="mono xs">04-02 12:28:23</td><td><span class="pill long">BUY</span></td><td class="mono xs">PAXG</td><td class="mono xs">0.001</td><td class="mono xs">$4615.9</td><td class="mono xs pos">+$0.00</td></tr><tr><td class="mono xs">04-03 01:38:41</td><td><span class="pill short">SELL</span></td><td class="mono xs">PAXG</td><td class="mono xs">0.006</td><td class="mono xs">$4662.3</td><td class="mono xs muted">—</td></tr><tr><td class="mono xs">04-03 05:18:07</td><td><span class="pill long">BUY</span></td><td class="mono xs">PAXG</td><td class="mono xs">0.006</td><td class="mono xs">$4665.4</td><td class="mono xs neg">$-0.02</td></tr><tr><td class="mono xs">04-03 06:45:31</td><td><span class="pill short">SELL</span></td><td class="mono xs">PAXG</td><td class="mono xs">0.006</td><td class="mono xs">$4664.8</td><td class="mono xs muted">—</td></tr><tr><td class="mono xs">04-03 07:08:00</td><td><span class="pill long">BUY</span></td><td class="mono xs">PAXG</td><td class="mono xs">0.006</td><td class="mono xs">$4663.0</td><td class="mono xs pos">+$0.01</td></tr><tr><td class="mono xs">04-04 03:15:52</td><td><span class="pill long">BUY</span></td><td class="mono xs">PAXG</td><td class="mono xs">0.064</td><td class="mono xs">$4652.0</td><td class="mono xs muted">—</td></tr><tr><td class="mono xs">04-04 03:15:52</td><td><span class="pill long">BUY</span></td><td class="mono xs">PAXG</td><td class="mono xs">0.064</td><td class="mono xs">$4652.0</td><td class="mono xs muted">—</td></tr><tr><td class="mono xs">04-04 03:57:11</td><td><span class="pill short">SELL</span></td><td class="mono xs">PAXG</td><td class="mono xs">0.004</td><td class="mono xs">$4652.2</td><td class="mono xs pos">+$0.00</td></tr><tr><td class="mono xs">04-04 04:00:04</td><td><span class="pill short">SELL</span></td><td class="mono xs">PAXG</td><td class="mono xs">0.005</td><td class="mono xs">$4652.2</td><td class="mono xs pos">+$0.00</td></tr><tr><td class="mono xs">04-04 04:00:04</td><td><span class="pill short">SELL</span></td><td class="mono xs">PAXG</td><td class="mono xs">0.013</td><td class="mono xs">$4652.2</td><td class="mono xs pos">+$0.00</td></tr><tr><td class="mono xs">04-04 04:01:11</td><td><span class="pill short">SELL</span></td><td class="mono xs">PAXG</td><td class="mono xs">0.008</td><td class="mono xs">$4652.2</td><td class="mono xs pos">+$0.00</td></tr><tr><td class="mono xs">04-04 04:04:53</td><td><span class="pill short">SELL</span></td><td class="mono xs">PAXG</td><td class="mono xs">0.005</td><td class="mono xs">$4652.2</td><td class="mono xs pos">+$0.00</td></tr><tr><td class="mono xs">04-04 04:05:33</td><td><span class="pill short">SELL</span></td><td class="mono xs">PAXG</td><td class="mono xs">0.004</td><td class="mono xs">$4652.2</td><td class="mono xs pos">+$0.00</td></tr><tr><td class="mono xs">04-04 04:05:39</td><td><span class="pill short">SELL</span></td><td class="mono xs">PAXG</td><td class="mono xs">0.004</td><td class="mono xs">$4652.2</td><td class="mono xs pos">+$0.00</td></tr></tbody></table>
+  </div>
+
+</div>
+
+<div class="card">
+  <div class="card-header"><h3>Plans (12)</h3><span class="muted small">routing computed live (pinned + auto)</span></div>
+  <table class="plans-table"><thead><tr>
+    <th>Plan</th><th>Dir</th><th>Priority</th><th>Entry zone</th><th>SL</th><th>TPs</th><th>Status</th><th>Binance route</th>
+  </tr></thead>
+  <tbody><tr><td class="xs">plan_ad_broken_shelf_retest_fade_short</td><td><span class="pill short">SHORT</span></td><td class="small">medium</td><td class="mono small">$63,800-$64,300</td><td class="mono small">$64,700</td><td class="mono xs">$63,300 / $62,400 / $61,500 / $60,500</td><td class="small pos">active</td><td class="xs">btc_carry_b (auto)</td></tr><tr><td class="xs">plan_ac_vah_relief_fade_short</td><td><span class="pill short">SHORT</span></td><td class="small">medium</td><td class="mono small">$64,500-$65,000</td><td class="mono small">$66,000</td><td class="mono xs">$64,000 / $62,800 / $61,500 / $60,500</td><td class="small pos">active</td><td class="xs">btc_carry_a (auto)</td></tr><tr><td class="xs">plan_ab_val_reclaim_long</td><td><span class="pill long">LONG</span></td><td class="small">low</td><td class="mono small">$60,000-$60,600</td><td class="mono small">$58,800</td><td class="mono xs">$61,800 / $63,000 / $64,900</td><td class="small muted">pending</td><td class="xs">(no route)</td></tr><tr><td class="xs">plan_vv_broken_shelf_fade_short</td><td><span class="pill short">SHORT</span></td><td class="small">medium</td><td class="mono small">$65,900-$66,900</td><td class="mono small">$67,600</td><td class="mono xs">$64,900 / $64,050 / $62,400 / $60,500</td><td class="small amber">partial_tp</td><td class="xs">(no route)</td></tr><tr><td class="xs">plan_tt_cme_gap_retest_fade_short</td><td><span class="pill short">SHORT</span></td><td class="small">low</td><td class="mono small">$69,800-$70,400</td><td class="mono small">$71,450</td><td class="mono xs">$68,000 / $66,800 / $66,150 / $64,900</td><td class="small muted">pending</td><td class="xs">(no route)</td></tr><tr><td class="xs">deep_water_tier1</td><td><span class="pill long">LONG</span></td><td class="small">medium</td><td class="mono small">$57,500-$58,500</td><td class="mono small">$55,000</td><td class="mono xs">$65,000 / $70,000 / $75,000</td><td class="small muted">pending</td><td class="xs">btc_carry_b (pinned)</td></tr><tr><td class="xs">deep_water_tier2</td><td><span class="pill long">LONG</span></td><td class="small">low</td><td class="mono small">$55,000-$55,900</td><td class="mono small">$53,400</td><td class="mono xs">$58,500 / $60,500 / $63,000 / $65,000</td><td class="small muted">pending</td><td class="xs">(no route)</td></tr><tr><td class="xs">plan_yy_valpoc_retest_long</td><td><span class="pill long">LONG</span></td><td class="small">low</td><td class="mono small">$63,600-$64,600</td><td class="mono small">$62,700</td><td class="mono xs">$66,000 / $67,800 / $70,000</td><td class="small muted">closed</td><td class="xs">(no route)</td></tr><tr><td class="xs">plan_zz_deep_liqsweep_long</td><td><span class="pill long">LONG</span></td><td class="small">low</td><td class="mono small">$63,300-$63,700</td><td class="mono small">$62,700</td><td class="mono xs">$64,900 / $66,000 / $67,800</td><td class="small muted">closed</td><td class="xs">(no route)</td></tr><tr><td class="xs">plan_xx_relief_rally_fade_short</td><td><span class="pill short">SHORT</span></td><td class="small">low</td><td class="mono small">$63,400-$64,400</td><td class="mono small">$65,600</td><td class="mono xs">$62,000 / $60,500 / $59,200 / $57,800</td><td class="small muted">closed</td><td class="xs">(no route)</td></tr><tr><td class="xs">plan_ww_60k_breakdown_short</td><td><span class="pill short">SHORT</span></td><td class="small">low</td><td class="mono small">$58,800-$59,800</td><td class="mono small">$61,200</td><td class="mono xs">$57,800 / $55,700 / $53,500 / $50,500</td><td class="small muted">closed</td><td class="xs">(no route)</td></tr><tr><td class="xs">deep_water_tier0</td><td><span class="pill long">LONG</span></td><td class="small">high</td><td class="mono small">$60,000-$60,500</td><td class="mono small">$58,200</td><td class="mono xs">$63,600 / $66,000 / $68,300 / $70,000</td><td class="small pos">active</td><td class="xs">btc_high (auto)</td></tr></tbody></table>
+</div>
+
+</div>
+</body></html>
+
